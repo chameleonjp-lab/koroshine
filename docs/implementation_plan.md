@@ -1,89 +1,79 @@
 # コロシャイン 実装計画書
 
-## 実装前確認
+## 実装前レビュー
 
-- 仕様確認: 完了。
-- サブエージェント役割分担: 完了。
-- サブエージェントレビュー: 完了。
-- 本計画書作成: 完了後に実装開始。
+今回の修正前に `index.html`、`README.md`、`docs/specification.md`、`docs/implementation_plan.md`、`docs/review_checklist.md` を確認した。
 
-## サブエージェント担当
+### 修正対象
 
-| 担当 | 役割 | 計画への反映 |
-| --- | --- | --- |
-| Agent A | 仕様監査 | 必須成果物、曖昧点、空リポジトリ前提を確認 |
-| Agent B | ゲーム設計 | 状態管理、ゲームループ、スコア停止、当たり判定に反映 |
-| Agent C | UI/UX | iPhone SE、Pointer Events、ズーム・選択・横スクロール防止に反映 |
-| Agent D | ランキング | `public.scores` 禁止、RPC未提示を曖昧点化、送信/取得1回に反映 |
-| Agent E | レビュー | 仕様・性能・破壊的変更・成果物チェックに反映 |
+- Supabaseランキング設定を本番値へ更新する。
+- `submit_score` / `get_best_score_ranking` を使うランキング送信・取得処理にする。
+- 送信失敗時にローカルランキングへ逃がさず、本番ランキング失敗として表示する。
+- その他のゲームURLを `https://chameleonjp.codeberg.page/chameleonjp_lab/` にする。
+- 30階到達仕様を文書に明記する。
+- 3階以上一気落下ボーナスを850ms以内の3連続穴通過に合わせる。
+- 🌰取得時の `+50` と `☀️` 表示を見やすくする。
+- リタイア、危険床接触、クリアの終了理由を結果画面へ表示する。
+- スマホ操作・状態管理・ランキング1回送信を再確認する。
+- README、仕様書、実装計画、レビュー確認リストを更新する。
 
-## 実装順序
+### 修正しない対象
 
-1. ドキュメント作成
-   - `docs/specification.md`
-   - `docs/implementation_plan.md`
-   - `docs/review_checklist.md`
-2. `index.html` 単体アプリの土台作成
-   - HTML画面: HOME / RULE / NAME / READY / PLAYING / RESULT / ERROR
-   - CSS: iPhone SE対応、横スクロール防止、選択防止、ズーム抑制
-   - Canvas: 高DPI対応、スマホ縦画面優先
-3. ゲーム本体実装
-   - 塔の回転入力を左右ドラッグで実装
-   - 球の自動落下
-   - 穴通過、危険床接触、🌰取得判定
-   - 最大表示床8階、アイテム最大8、エフェクト最大60に制限
-4. スコア実装
-   - 1階突破 +100
-   - 🌰取得 +50 と `🌰 → ☀️` / `+50` 演出
-   - 連続落下コンボ
-   - 3階以上一気落下 +300
-   - 30階到達 +3000
-   - RESULT中の加算停止
-5. ランキング実装
-   - 設定可能なSupabase RPCラッパーを実装
-   - `public.scores` は参照しない
-   - 終了時自動送信1回、ランキング取得1回
-   - 未設定・失敗時は結果表示を継続しエラー表示
-   - 登録ボタンは設置しない
-6. README作成
-   - ゲーム概要、遊び方、スコア、ランキング、公開URL、構成、ローカル確認、Codeberg公開方法
-7. 自己レビュー
-   - `docs/review_checklist.md` に沿って確認
-   - 静的確認、ローカルHTTP配信、可能ならブラウザ表示確認
-8. コミット・PR作成
+- ゲーム名「コロシャイン」。
+- 公開予定URL。
+- 左右ドラッグのみの基本操作。
+- 30階クリアの基本ルール。
+- スコア項目（🌰 +50、1階突破 +100、コンボ、3階以上一気落下 +300、30階 +3000）。
+- `index.html` 1ファイルで動く構成。
+- npmやビルド環境を前提にしない構成。
+
+## 修正計画
+
+1. 現状レビュー
+   - 既存のランキング設定が未設定で、RPC名も旧想定であることを確認する。
+   - スコア・状態管理・スマホCSS・ドキュメントの差分を確認する。
+2. 影響範囲確認
+   - 変更対象は `index.html` とドキュメント4ファイルに限定する。
+   - ゲームの見た目や基本ルールは必要最小限の表示追加に留める。
+3. 実装
+   - `RANKING_CONFIG` に Supabase URL / Publishable key / `submit_score` / `get_best_score_ranking` を設定する。
+   - REST RPC 呼び出しを実装し、送信値を `p_display_name` / `p_game_slug` / `p_score` / `p_client_version` に統一する。
+   - 結果画面で先に結果を表示し、送信中、成功・失敗、ランキング取得を順に表示する。
+   - 一気落下ボーナスを850ms以内の3連続穴通過ごとに発生させる。
+   - 🌰取得演出を取得位置の `☀️` と `+50` 表示にする。
+   - 終了理由を結果画面に追加する。
+4. 自己レビュー
+   - `node --check` 相当でHTML内スクリプトの構文確認を行う。
+   - `rg` で禁止・更新対象文字列を確認する。
+   - `python3 -m http.server` で静的配信可能性を確認する。
+5. ドキュメント更新
+   - README、仕様書、実装計画、レビュー確認リストを本番ランキング仕様へ更新する。
+6. 最終報告
+   - 変更ファイル、不具合、送信仕様、取得仕様、スコア整合性、スマホ影響、性能影響、要実機確認を報告する。
 
 ## 影響範囲
 
-- 新規作成: `index.html`
-- 新規作成: `README.md`
-- 新規作成: `docs/specification.md`
-- 新規作成: `docs/implementation_plan.md`
-- 新規作成: `docs/review_checklist.md`
-- 既存コードは現時点で存在しないため、破壊的変更リスクは低い。
+- 変更: `index.html`
+- 変更: `README.md`
+- 変更: `docs/specification.md`
+- 変更: `docs/implementation_plan.md`
+- 変更: `docs/review_checklist.md`
 
-## リスク
+## ランキング実装方針
 
-- 既存RPC情報が未提示のため、本番ランキング接続は設定待ちになる。
-- ブラウザ上のスコアは改ざん可能なため、RPC側で検証が必要。
-- iOS Safari実機検証はこの環境では限定的。
-- `user-scalable=no` はゲーム操作要件を満たす一方、アクセシビリティ面の制約になる。
-- Canvasゲームのバランスは実機操作で追加調整が必要。
+- Supabase URL: `https://mlpnjgezrnhdxsxolyzj.supabase.co`
+- Publishable key: `sb_publishable_drzcy0v97knU6FgjqSgBHw_0A9XPdFM`
+- 送信RPC: `submit_score`
+- 取得RPC: `get_best_score_ranking`
+- `game_slug`: `koroshine`
+- 送信値: `p_display_name`、`p_game_slug`、`p_score`、`p_client_version`
+- secret key / service_role key は使用しない。
+- `public.scores` は使用しない。
+- 送信・取得は結果画面で1回のみ。
+- ゲームループ中には通信しない。
 
-## 曖昧点と扱い
+## リスクと残作業
 
-| 曖昧点 | 暫定対応 |
-| --- | --- |
-| Supabase URL / anon key / RPC名 | `RANKING_CONFIG` に未設定値として置き、未設定時は通信失敗扱いで結果継続 |
-| RPC引数・戻り値 | 一般的な `game_key` / `player_name` / `score` / `metadata` を想定し、変更しやすくする |
-| 同点順位 | 取得RPC側の順位を優先。ローカル表示はスコア降順の簡易表示 |
-| 参考ゲームの詳細 | コピー禁止のため、塔回転・落下・穴通過という抽象的仕組みのみ採用 |
-
-## レビュー方法
-
-- 必須ファイルが揃っているか確認する。
-- iPhone SE幅相当で表示が崩れないか確認する。
-- `PLAYING` 以外でゲーム更新・当たり判定・スコア加算が止まるかコード確認する。
-- スコア加算条件をコードと仕様で照合する。
-- `public.scores` 文字列が実装に存在しないことを確認する。
-- ランキング送信と取得がフラグで1回に制限されていることを確認する。
-- 依存なしで `index.html` 単体表示できることを確認する。
+- iOS Safari実機でのピンチズーム、ダブルタップ拡大、下部ボタン操作は要実機確認。
+- Supabase側の `public.games` 登録とカメレオンJP実験場側への追加は公開前に別途必要。
+- `display_order` は既存ゲーム一覧に合わせて後で決める。
