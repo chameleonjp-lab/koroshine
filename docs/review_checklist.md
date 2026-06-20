@@ -112,3 +112,15 @@
 - 確認済み: 一気落下予告と `+300` 発生条件維持を確認する観点を追加した。
 - 確認済み: 結果コメントを確認する観点を追加した。
 - 確認済み: ランキング失敗文言が短く、詳細エラーを画面に長く出さないことを確認する観点を追加した。
+
+## デザイン・操作性・読み込み改善（今回）
+
+- 確認済み: `PLAYING` 遷移時に `resize()` を呼び、Canvas描画解像度を確定する（初回1×1解像度の不具合を修正）。
+- 確認済み: `PLAYING` 以外で `requestAnimationFrame` ループを停止し、不要な毎フレーム描画を行わない。
+- 確認済み: `theme-color` を背景上端と一致させ、ホーム追加用メタ（`mobile-web-app-capable` ほか）を追加した。
+- 確認済み: 外部ファイル不要のインラインSVGファビコンを追加した。
+- 確認済み: `#rankingStatus` に `role="status" aria-live="polite"` を付与した。
+- 確認済み: 名前入力でEnterキーから次へ進める。
+- 確認済み: `share()` が Web Share / クリップボード / `prompt` の順でフォールバックする。
+- 確認済み: 未使用の `renderLocalRankingDevOnly()` を除去した。
+- 確認方法: `node --check` 構文OK、DOM/Canvasモックの機能テストで `17 passed, 0 failed`、`http-server` で 200 応答。
