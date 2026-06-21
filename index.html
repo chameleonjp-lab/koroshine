@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#fff7cf">
-  <meta name="description" content="くるくる回して落ち続けろ。🌰を集めて高得点を狙うスマホ向けブラウザゲーム「コロシャイン」。">
+  <meta name="theme-color" content="#fff7d6">
+  <meta name="description" content="重力で落ちて跳ねる太陽を、塔を回して穴へ通せ。物理演算で気持ちよく落ち続けるスマホ向けブラウザゲーム「コロシャイン」。">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -13,16 +13,16 @@
   <title>コロシャイン</title>
   <style>
     :root{--bg:#fff7cf;--ink:#2b2316;--accent:#f59f00;--danger:#e64980;--safe:#ffe066;--panel:rgba(255,255,255,.86);--shadow:0 14px 34px rgba(91,59,0,.18)}
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;min-height:100%;overflow-x:hidden;overscroll-behavior:none;background:linear-gradient(#fff7cf,#ffd43b);color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:manipulation;user-select:none;-webkit-user-select:none}body{min-height:100dvh;padding:env(safe-area-inset-top) 10px env(safe-area-inset-bottom);display:flex;justify-content:center}.app{width:min(100%,430px);min-height:100dvh;display:flex;flex-direction:column;gap:8px}.screen{display:none;flex:1;align-items:center;justify-content:center}.screen.active{display:flex}#result.active{align-items:flex-start;justify-content:center;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 0;min-height:100dvh}#result.active .card{margin:auto 0}.card{width:100%;background:var(--panel);border:2px solid rgba(255,184,0,.45);border-radius:22px;box-shadow:var(--shadow);padding:18px;text-align:center}h1{font-size:clamp(2.4rem,13vw,4.2rem);line-height:.95;margin:0 0 8px;text-shadow:0 4px 0 #ffd43b}h2{margin:0 0 10px;font-size:1.5rem}.lead{font-weight:800;font-size:1.05rem}.buttons{display:grid;gap:10px;margin-top:14px}button,.button{min-height:46px;border:0;border-radius:999px;padding:10px 16px;background:var(--ink);color:#fff;font-weight:900;font-size:1rem;box-shadow:0 6px 0 rgba(0,0,0,.18);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}button:active,.button:active{transform:translateY(2px);box-shadow:0 3px 0 rgba(0,0,0,.18)}button.secondary{background:#fff3bf;color:#3b2f16;border:2px solid #fab005}button.danger{background:var(--danger)}input{width:100%;min-height:48px;border-radius:14px;border:2px solid #fab005;padding:10px 12px;font-size:16px;font-weight:800;text-align:center;background:white;color:var(--ink)}.game{display:none;flex:1;flex-direction:column;gap:6px;min-height:100dvh}.game.active{display:flex}.hud{display:grid;grid-template-columns:1fr 1fr auto;gap:6px;align-items:center;background:rgba(255,255,255,.74);border-radius:16px;padding:7px 8px;font-weight:900;box-shadow:var(--shadow)}.hud span{display:block;font-size:.78rem;color:#6b5200}.hud strong{font-size:1rem}.canvas-wrap{position:relative;flex:1;min-height:390px;border-radius:20px;overflow:hidden;background:linear-gradient(#fff9db,#ffec99);box-shadow:var(--shadow);touch-action:none}canvas{width:100%;height:100%;display:block;touch-action:none}.hint{min-height:34px;text-align:center;font-weight:800;font-size:.88rem;background:rgba(255,255,255,.65);border-radius:14px;padding:8px}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stat{background:#fff3bf;border-radius:14px;padding:10px;font-weight:900}.notice{margin-top:10px;border-radius:14px;padding:10px;background:#fff3bf;color:#5c3d00;font-weight:800}.ranking{margin:10px 0 0;padding:0;list-style:none;text-align:left}.ranking li{display:grid;grid-template-columns:2.2em 1fr auto;gap:8px;padding:8px;border-bottom:1px solid rgba(0,0,0,.08);font-weight:800}.rules{text-align:left;line-height:1.65}.shake{animation:shake .28s linear}.flash{animation:flash .55s ease}.clear{animation:clearGlow .9s ease-in-out 2}@keyframes shake{25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}@keyframes flash{50%{filter:brightness(1.35) saturate(1.3)}}@keyframes clearGlow{50%{filter:drop-shadow(0 0 18px #ffd43b)}}@media(max-width:340px){.card{padding:14px}.canvas-wrap{min-height:360px}.hud{grid-template-columns:1fr 1fr}.hud button{grid-column:1/-1;min-height:40px}.lead{font-size:.98rem}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;min-height:100%;overflow-x:hidden;overscroll-behavior:none;background:linear-gradient(#fff7d6,#ffd166);color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:manipulation;user-select:none;-webkit-user-select:none}body{min-height:100vh;min-height:100dvh;padding:env(safe-area-inset-top) 10px env(safe-area-inset-bottom);display:flex;justify-content:center}.app{width:min(100%,430px);min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;gap:8px}.screen{display:none;flex:1;align-items:center;justify-content:center}.screen.active{display:flex}#result.active{align-items:flex-start;justify-content:center;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 0;min-height:100vh;min-height:100dvh}#result.active .card{margin:auto 0}.card{width:100%;background:var(--panel);border:2px solid rgba(255,184,0,.45);border-radius:22px;box-shadow:var(--shadow);padding:18px;text-align:center}h1{font-size:clamp(2.4rem,13vw,4.2rem);line-height:.95;margin:0 0 8px;text-shadow:0 4px 0 #ffd43b}h2{margin:0 0 10px;font-size:1.5rem}.lead{font-weight:800;font-size:1.05rem}.buttons{display:grid;gap:10px;margin-top:14px}button,.button{min-height:46px;border:0;border-radius:999px;padding:10px 16px;background:var(--ink);color:#fff;font-weight:900;font-size:1rem;box-shadow:0 6px 0 rgba(0,0,0,.18);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}button:active,.button:active{transform:translateY(2px);box-shadow:0 3px 0 rgba(0,0,0,.18)}button.secondary{background:#fff3bf;color:#3b2f16;border:2px solid #fab005}button.danger{background:var(--danger)}input{width:100%;min-height:48px;border-radius:14px;border:2px solid #fab005;padding:10px 12px;font-size:16px;font-weight:800;text-align:center;background:white;color:var(--ink)}.game{display:none;flex:1;flex-direction:column;gap:6px;min-height:100vh;min-height:100dvh}.game.active{display:flex}.hud{display:grid;grid-template-columns:1fr 1fr auto;gap:6px;align-items:center;background:rgba(255,255,255,.74);border-radius:16px;padding:7px 8px;font-weight:900;box-shadow:var(--shadow)}.hud span{display:block;font-size:.78rem;color:#6b5200}.hud strong{font-size:1rem}.canvas-wrap{position:relative;flex:1 1 auto;min-height:60vh;border-radius:20px;overflow:hidden;background:linear-gradient(#fff9db,#ffec99);box-shadow:var(--shadow);touch-action:none}canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}.hint{min-height:34px;text-align:center;font-weight:800;font-size:.88rem;background:rgba(255,255,255,.65);border-radius:14px;padding:8px}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stat{background:#fff3bf;border-radius:14px;padding:10px;font-weight:900}.notice{margin-top:10px;border-radius:14px;padding:10px;background:#fff3bf;color:#5c3d00;font-weight:800}.ranking{margin:10px 0 0;padding:0;list-style:none;text-align:left}.ranking li{display:grid;grid-template-columns:2.2em 1fr auto;gap:8px;padding:8px;border-bottom:1px solid rgba(0,0,0,.08);font-weight:800}.rules{text-align:left;line-height:1.65}.shake{animation:shake .28s linear}.flash{animation:flash .55s ease}.clear{animation:clearGlow .9s ease-in-out 2}@keyframes shake{25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}@keyframes flash{50%{filter:brightness(1.35) saturate(1.3)}}@keyframes clearGlow{50%{filter:drop-shadow(0 0 18px #ffd43b)}}@media(max-width:340px){.card{padding:14px}.hud{grid-template-columns:1fr 1fr}.hud button{grid-column:1/-1;min-height:40px}.lead{font-size:.98rem}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
   </style>
 </head>
 <body>
 <div class="app" id="app">
-  <section class="screen active" id="home"><div class="card"><h1>コロシャイン</h1><p class="lead">くるくる回して落ち続けろ。<br>🌰を集めて高得点を狙え。</p><div class="buttons"><button id="startBtn">ゲーム開始</button><button class="secondary" id="ruleBtn">ルール説明</button><button class="secondary" data-share="game">ゲームをシェア</button><a class="button secondary" href="https://chameleonjp.codeberg.page/chameleonjp_lab/" target="_blank" rel="noopener">その他のゲーム</a></div></div></section>
-  <section class="screen" id="rule"><div class="card"><h2>ルール</h2><div class="rules"><p>球は自動で落下します。左右ドラッグで塔を回転させ、穴へ通してください。</p><ul><li>1階突破: +100</li><li>🌰取得: +50（🌰→☀️）</li><li>連続落下でコンボ加点</li><li>3階以上一気落下: +300</li><li>30階到達: +3000 でクリア</li><li>危険床に触れると終了</li></ul></div><div class="buttons"><button id="ruleStartBtn">名前入力へ</button><button class="secondary" data-goto="HOME">ホームへ</button></div></div></section>
+  <section class="screen active" id="home"><div class="card"><h1>コロシャイン</h1><p class="lead">重力で落ちて跳ねる太陽を、<br>塔を回して穴へ通し続けろ。</p><div class="buttons"><button id="startBtn">ゲーム開始</button><button class="secondary" id="ruleBtn">ルール説明</button><button class="secondary" data-share="game">ゲームをシェア</button><a class="button secondary" href="https://chameleonjp.codeberg.page/chameleonjp_lab/" target="_blank" rel="noopener">その他のゲーム</a></div></div></section>
+  <section class="screen" id="rule"><div class="card"><h2>ルール</h2><div class="rules"><p>太陽は重力で落下し、床に当たると跳ね返ります。左右ドラッグで塔を回し、床のすき間（穴）を正面に合わせて下へ通してください。</p><ul><li>1階通過: +100</li><li>🌰取得: +50（🌰→☀️）</li><li>跳ねずに連続で落ちるとコンボ加点</li><li>3階以上の一気落下: +300</li><li>30階到達: +3000 でクリア</li><li><b>赤い危険帯</b>に乗ると終了</li></ul></div><div class="buttons"><button id="ruleStartBtn">名前入力へ</button><button class="secondary" data-goto="HOME">ホームへ</button></div></div></section>
   <section class="screen" id="name"><div class="card"><h2>名前入力</h2><p>ランキング用の名前を10文字程度で入力してください。</p><input id="playerName" maxlength="10" autocomplete="nickname" placeholder="なまえ"><div class="buttons"><button id="readyBtn">準備OK</button><button class="secondary" data-goto="HOME">戻る</button></div></div></section>
-  <section class="screen" id="ready"><div class="card"><h2>READY</h2><p class="lead">左右ドラッグで塔を回転！<br>光る穴と連続落下の予告を見て高得点を狙おう。</p><div class="buttons"><button id="playBtn">スタート</button><button class="secondary" data-goto="NAME">名前を変える</button></div></div></section>
-  <section class="game" id="game"><div class="hud"><div><span>スコア</span><strong id="scoreText">0</strong></div><div><span>現在階層</span><strong id="floorText">1 / 30</strong></div><button class="danger" id="retireBtn">リタイア</button></div><div class="canvas-wrap" id="canvasWrap"><canvas id="gameCanvas" aria-label="コロシャインのゲーム画面"></canvas></div><div class="hint">左右ドラッグのみで塔を回転。光る穴と連続落下の予告を見て落ち続けよう。</div></section>
+  <section class="screen" id="ready"><div class="card"><h2>READY</h2><p class="lead">左右ドラッグで塔を回転！<br>正面のすき間に太陽を通し、赤い危険帯を避けよう。</p><div class="buttons"><button id="playBtn">スタート</button><button class="secondary" data-goto="NAME">名前を変える</button></div></div></section>
+  <section class="game" id="game"><div class="hud"><div><span>スコア</span><strong id="scoreText">0</strong></div><div><span>現在階層</span><strong id="floorText">1 / 30</strong></div><button class="danger" id="retireBtn">リタイア</button></div><div class="canvas-wrap" id="canvasWrap"><canvas id="gameCanvas" aria-label="コロシャインのゲーム画面"></canvas></div><div class="hint">左右ドラッグで塔を回転。正面のすき間に太陽を通して落とそう。赤い帯は危険！</div></section>
   <section class="screen" id="result"><div class="card"><h2 id="resultTitle">結果</h2><div class="result-grid"><div class="stat">終了理由<br><strong id="resultReason">-</strong></div><div class="stat">到達階<br><strong id="resultFloor">1</strong></div><div class="stat">スコア<br><strong id="resultScore">0</strong></div></div><div class="notice" id="resultComment">まずは10階を目指しましょう</div><div class="notice" id="rankingStatus" role="status" aria-live="polite">ランキング送信準備中...</div><h3>ランキング</h3><ol class="ranking" id="rankingList"></ol><div class="buttons"><button id="retryBtn">もう一度遊ぶ</button><button class="secondary" data-share="result">結果をシェア</button><a class="button secondary" href="https://chameleonjp.codeberg.page/chameleonjp_lab/" target="_blank" rel="noopener">その他のゲーム</a><button class="secondary" data-goto="HOME">ホームへ</button></div></div></section>
   <section class="screen" id="error"><div class="card"><h2>ERROR</h2><p id="errorMessage">エラーが発生しました。</p><button data-goto="HOME">ホームへ</button></div></section>
 </div>
@@ -31,47 +31,339 @@
   'use strict';
   const STATE={HOME:'HOME',RULE:'RULE',NAME:'NAME',READY:'READY',PLAYING:'PLAYING',RESULT:'RESULT',ERROR:'ERROR'};
   const PUBLIC_URL='https://chameleonjp.codeberg.page/koroshine/';
-  const RANKING_CONFIG={enabled:true,supabaseUrl:'https://mlpnjgezrnhdxsxolyzj.supabase.co',publishableKey:'sb_publishable_drzcy0v97knU6FgjqSgBHw_0A9XPdFM',submitRpc:'submit_score',rankingRpc:'get_best_score_ranking',statsRpc:'get_game_play_stats',gameSlug:'koroshine',clientVersion:'koroshine-1.0.0'};
+  const RANKING_CONFIG={enabled:true,supabaseUrl:'https://mlpnjgezrnhdxsxolyzj.supabase.co',publishableKey:'sb_publishable_drzcy0v97knU6FgjqSgBHw_0A9XPdFM',submitRpc:'submit_score',rankingRpc:'get_best_score_ranking',statsRpc:'get_game_play_stats',gameSlug:'koroshine',clientVersion:'koroshine-2.0.0'};
   const $=id=>document.getElementById(id);
   const screens={HOME:$('home'),RULE:$('rule'),NAME:$('name'),READY:$('ready'),RESULT:$('result'),ERROR:$('error')};
   const gameEl=$('game'), canvas=$('gameCanvas'), wrap=$('canvasWrap'), ctx=canvas.getContext('2d');
   const scoreText=$('scoreText'), floorText=$('floorText'), playerNameInput=$('playerName');
-  const TAU=Math.PI*2, MAX_FLOOR=30, VISIBLE=8;
-  let state=STATE.HOME,last=0,dpr=1,rankingSent=false,rankingFetched=false,gameOverHandled=false,rafId=0;
-  const game={score:0,floor:1,rotation:0,ball:{x:0,y:0,r:10,vy:85},floors:[],items:[],effects:[],combo:0,lastDropAt:0,dropBurst:0,finalReason:'',playerName:'',startedAt:0,won:false,pendingFinish:null,feedbackText:'',feedbackUntil:0,lastFailX:0,lastFailY:0,input:{active:false,lastX:0}};
-  function setState(next){state=next;Object.values(screens).forEach(s=>s.classList.remove('active'));gameEl.classList.remove('active');if(next===STATE.PLAYING){gameEl.classList.add('active');resize();startLoop();}else (screens[next]||screens.ERROR).classList.add('active');}
-  function vibrate(ms){if(navigator.vibrate) navigator.vibrate(ms)}
-  function resize(){const rect=wrap.getBoundingClientRect();dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.max(1,Math.floor(rect.width*dpr));canvas.height=Math.max(1,Math.floor(rect.height*dpr));ctx.setTransform(dpr,0,0,dpr,0,0);game.ball.x=rect.width/2}
-  function floorY(n){const h=wrap.clientHeight;return h*0.28+(n-game.floor)*58+game.ball.y%58}
-  function makeFloor(n){const danger=n%5===0;return{n,hole:(n*1.37)%TAU,width:danger?.68:.9,danger,item:n%3===0&&!danger&&!game.items.some(i=>i.floor===n)}}
-  function reset(){rankingSent=false;rankingFetched=false;gameOverHandled=false;Object.assign(game,{score:0,floor:1,rotation:0,floors:[],items:[],effects:[],combo:0,lastDropAt:0,dropBurst:0,finalReason:'',startedAt:performance.now(),won:false,pendingFinish:null,feedbackText:'',feedbackUntil:0,lastFailX:0,lastFailY:0});game.ball={x:wrap.clientWidth/2,y:86,r:10,vy:92};for(let i=1;i<=MAX_FLOOR;i++)game.floors.push(makeFloor(i));game.items=game.floors.filter(f=>f.item).slice(0,8).map(f=>({floor:f.n,angle:f.hole+.55,collected:false,sun:false}));updateHud();}
-  function addScore(v,label,x,y){if(state!==STATE.PLAYING)return;game.score+=v;effect(label||`+${v}`,x||wrap.clientWidth/2,y||120,'score')}
-  function effect(text,x,y,type='pop'){game.effects.push({text,x,y,life:0.8,max:0.8,type});if(game.effects.length>60)game.effects.splice(0,game.effects.length-60)}
+  const TAU=Math.PI*2, MAX_FLOOR=30, VISIBLE=7;
+  // --- 物理 / 描画パラメータ（CSSピクセル・秒） ---
+  const PERSP=0.34;        // 床リングの見下ろし遠近（縦つぶし率）
+  const GRAV=2200;         // 重力加速度
+  const MAXV=1600;         // 落下速度上限（トンネリング防止）
+  const FLOORGAP=132;      // 階間のワールド距離
+  const BOUNCEV=700;       // 跳ね返り初速
+  const SENS=0.0125;       // ドラッグ→回転 感度
+  const THICK=11;          // 床の厚み（立体表現）
+  const FIXED=1/120;       // 物理固定ステップ
+  let state=STATE.HOME,last=0,dpr=1,rafId=0,acc=0,ro=null;
+  let rankingSent=false,rankingFetched=false,gameOverHandled=false;
+  const view={W:1,H:1,R:130,RBALL:18};
+  const game={
+    score:0,floor:1,angle:0,by:0,bvy:0,cameraY:0,
+    platforms:[],effects:[],particles:[],trail:[],
+    combo:0,dropBurst:0,lastDropAt:0,squash:0,shake:0,
+    pendingFinish:null,finalReason:'',playerName:'',won:false,startedAt:0,
+    feedbackText:'',failSY:0,input:{active:false,lastX:0}
+  };
+
+  // ---------- ユーティリティ ----------
+  function vibrate(ms){if(navigator.vibrate)try{navigator.vibrate(ms)}catch(e){}}
+  function normAngle(a){a%=TAU;return a<0?a+TAU:a}
   function angleDiff(a,b){return Math.atan2(Math.sin(a-b),Math.cos(a-b))}
-  function update(dt){if(state!==STATE.PLAYING)return;const now=performance.now();if(game.pendingFinish){game.input.active=false;if(now>=game.pendingFinish.at)finish(game.pendingFinish.won,game.pendingFinish.reason);return}if((game.dropBurst||game.combo)&&now-game.lastDropAt>=850){game.dropBurst=0;game.combo=0;}game.ball.y+=game.ball.vy*dt;const current=game.floors[game.floor-1];if(!current)return finish(true,'CLEAR');const y=floorY(current.n);if(game.ball.y>=y-8){const aligned=Math.abs(angleDiff(game.rotation,current.hole))<current.width/2;if(current.danger&&!aligned){game.lastFailX=game.ball.x;game.lastFailY=y;game.pendingFinish={won:false,reason:'危険床接触',at:performance.now()+350};game.feedbackText='ここで危険床に接触';game.feedbackUntil=performance.now()+350;effect('危険床!',game.ball.x,y,'danger');vibrate(30);return}if(aligned){const quick=now-game.lastDropAt<850;game.combo=quick?game.combo+1:1;game.dropBurst=quick?game.dropBurst+1:1;game.lastDropAt=now;game.ball.y-=58;game.floor++;addScore(100,'+100',game.ball.x,y);if(game.combo>=2)addScore((game.combo-1)*50,`${game.combo}連 +${(game.combo-1)*50}`,game.ball.x,y-24);if(game.dropBurst>=3){addScore(300,'一気落下 +300',game.ball.x,y-46);game.dropBurst=0}effect('ぐらっ',game.ball.x,y,'drop');vibrate(18);wrap.classList.remove('shake');void wrap.offsetWidth;wrap.classList.add('shake');if(game.floor>=MAX_FLOOR){addScore(3000,'30階 +3000',game.ball.x,90);finish(true,'30階到達');return}}else{game.dropBurst=0;game.combo=0;game.ball.y=y-8}}
-    collectItems();game.effects.forEach(e=>{e.life-=dt;e.y-=24*dt});game.effects=game.effects.filter(e=>e.life>0).slice(-60);updateHud();}
-  function collectItems(){const item=game.items.find(i=>!i.collected&&i.floor===game.floor);if(!item)return;const d=Math.abs(angleDiff(game.rotation,item.angle));if(d<.35){item.collected=true;item.sun=true;item.sunUntil=performance.now()+500;const sx=wrap.clientWidth/2+Math.cos(game.rotation+item.angle)*(Math.min(wrap.clientWidth*.38,150)-4);const sy=floorY(item.floor)-8;addScore(50,'+50',sx,sy-24);effect('☀️',sx,sy,'item');vibrate(10)}}
-  function resultComment(won,reason){if(reason==='リタイア')return 'リタイアしました。次はもう少し深く進めます';if(reason==='危険床接触')return '危険床で終了。穴が光るタイミングを狙いましょう';if(won||game.floor>=MAX_FLOOR)return '完全クリア！';if(game.floor>=20)return 'かなり深くまで進みました';if(game.floor>=10)return '次は20階を狙えます';return 'まずは10階を目指しましょう'}
-  function finish(won,reason){if(gameOverHandled)return;gameOverHandled=true;game.pendingFinish=null;game.won=won;game.finalReason=reason;state=STATE.RESULT;wrap.classList.toggle('clear',won);$('resultTitle').textContent=won?'クリア！':'結果';$('resultReason').textContent=reason|| (won?'クリア':'終了');$('resultFloor').textContent=Math.min(game.floor,MAX_FLOOR);$('resultScore').textContent=game.score;$('resultComment').textContent=resultComment(won,reason);setState(STATE.RESULT);renderRankingShell();submitAndFetchRankingOnce();}
-  function updateHud(){scoreText.textContent=game.score;floorText.textContent=`${Math.min(game.floor,MAX_FLOOR)} / ${MAX_FLOOR}`}
-  function draw(){const w=wrap.clientWidth,h=wrap.clientHeight;ctx.clearRect(0,0,w,h);ctx.save();ctx.fillStyle='#fff3bf';ctx.fillRect(0,0,w,h);ctx.translate(w/2,0);for(let i=0;i<VISIBLE;i++){const f=game.floors[game.floor-1+i];if(!f)continue;const y=floorY(f.n);drawFloor(f,y,w)}ctx.restore();drawBall(w,h);drawEffects();drawPlayFeedback(w,h);if(state===STATE.PLAYING){ctx.fillStyle='rgba(43,35,22,.74)';ctx.font='700 13px system-ui';ctx.textAlign='center';ctx.fillText('ドラッグで塔を回転',w/2,h-18)}}
-  function drawFloor(f,y,w){const radius=Math.min(w*.38,150);const isCurrent=f.n===game.floor;const diff=Math.abs(angleDiff(game.rotation,f.hole));const near=isCurrent&&diff<f.width*.95;const passable=isCurrent&&diff<f.width/2;ctx.save();ctx.translate(0,y);ctx.rotate(game.rotation);ctx.lineWidth=16;ctx.lineCap='round';ctx.strokeStyle=f.danger?'#e64980':'#f59f00';ctx.beginPath();ctx.arc(0,0,radius,f.hole+f.width/2,f.hole-f.width/2+TAU);ctx.stroke();if(near){ctx.save();ctx.lineWidth=passable?24:20;ctx.globalAlpha=passable?.58:.32;ctx.shadowColor=f.danger?'#ff6b9a':'#fff3bf';ctx.shadowBlur=passable?18:10;ctx.strokeStyle=f.danger?'#ffc2d4':'#fff9db';ctx.beginPath();ctx.arc(0,0,radius,f.hole+f.width/2,f.hole-f.width/2+TAU);ctx.stroke();ctx.restore()}ctx.fillStyle='#5c3d00';ctx.font='900 12px system-ui';ctx.textAlign='center';ctx.fillText(`${f.n}F`,0,4);const item=game.items.find(i=>i.floor===f.n);if(item&&(!item.collected||performance.now()<(item.sunUntil||0))){ctx.save();ctx.rotate(item.angle);ctx.font='22px serif';ctx.fillText(item.collected?'☀️':'🌰',radius-4,8);ctx.restore()}ctx.restore()}
-  function roundedRect(context,x,y,width,height,radius){context.beginPath();if(typeof context.roundRect==='function'){context.roundRect(x,y,width,height,radius);return}const r=Math.min(radius,width/2,height/2);context.moveTo(x+r,y);context.lineTo(x+width-r,y);context.quadraticCurveTo(x+width,y,x+width,y+r);context.lineTo(x+width,y+height-r);context.quadraticCurveTo(x+width,y+height,x+width-r,y+height);context.lineTo(x+r,y+height);context.quadraticCurveTo(x,y+height,x,y+height-r);context.lineTo(x,y+r);context.quadraticCurveTo(x,y,x+r,y);}
-  function drawBall(w){ctx.save();ctx.translate(w/2,game.ball.y);ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(0,0,game.ball.r+4,0,TAU);ctx.fill();ctx.fillStyle='#ffd43b';ctx.beginPath();ctx.arc(0,0,game.ball.r,0,TAU);ctx.fill();ctx.fillStyle='#5c3d00';ctx.font='12px serif';ctx.textAlign='center';ctx.fillText('🌞',0,4);ctx.restore()}
-  function drawPlayFeedback(w,h){if(state!==STATE.PLAYING)return;const now=performance.now();ctx.save();ctx.textAlign='center';if(game.pendingFinish){ctx.strokeStyle='rgba(230,73,128,.86)';ctx.lineWidth=4;ctx.beginPath();ctx.arc(game.lastFailX,game.lastFailY,26,0,TAU);ctx.stroke();ctx.fillStyle='#e64980';ctx.font='900 18px system-ui';ctx.fillText(game.feedbackText, w/2, Math.max(44,game.lastFailY-34));ctx.restore();return}let lines=[];if(game.combo>=3)lines.push(`${game.combo}連続! 一気落下チャンス`);else if(game.combo>=2)lines.push(`${game.combo}連続!`);if(game.dropBurst===1)lines.push('連続落下 1/3');else if(game.dropBurst===2)lines.push('あと1回で一気落下');if(now<game.feedbackUntil&&game.feedbackText)lines.push(game.feedbackText);if(lines.length){ctx.fillStyle='rgba(255,255,255,.78)';ctx.strokeStyle='rgba(245,159,0,.55)';ctx.lineWidth=2;const boxH=20+lines.length*24;roundedRect(ctx,w/2-128,16,256,boxH,14);ctx.fill();ctx.stroke();ctx.fillStyle='#5c3d00';ctx.font='900 17px system-ui';lines.forEach((line,i)=>ctx.fillText(line,w/2,43+i*24))}ctx.restore()}
-  function drawEffects(){ctx.textAlign='center';game.effects.forEach(e=>{const p=e.life/e.max;ctx.globalAlpha=Math.max(0,p);ctx.font=e.type==='item'?'26px serif':'900 18px system-ui';ctx.fillStyle=e.type==='danger'?'#e64980':'#2b2316';ctx.fillText(e.text,e.x,e.y);ctx.globalAlpha=1})}
-  function loop(t){const dt=Math.min((t-last)/1000||0,1/30);last=t;update(dt);draw();if(state===STATE.PLAYING)rafId=requestAnimationFrame(loop)}
-  function startLoop(){last=performance.now();cancelAnimationFrame(rafId);rafId=requestAnimationFrame(loop)}
-  function startReady(){const name=playerNameInput.value.trim().slice(0,10);if(!name){playerNameInput.focus();return}localStorage.setItem('koroshine:name',name);game.playerName=name;setState(STATE.READY)}
-  function share(kind){const text=kind==='result'?`コロシャインで${game.score}点、${Math.min(game.floor,MAX_FLOOR)}階まで到達！`: 'コロシャイン - くるくる回して落ち続けろ。';const url=PUBLIC_URL;const full=`${text} ${url}`;if(navigator.share){navigator.share({title:'コロシャイン',text,url}).catch(()=>{});return}if(navigator.clipboard?.writeText){navigator.clipboard.writeText(full).then(()=>alert('シェア文をコピーしました')).catch(()=>prompt('コピーしてシェアしてください',full));return}prompt('コピーしてシェアしてください',full)}
-  async function callRpc(name,payload){const res=await fetch(`${RANKING_CONFIG.supabaseUrl}/rest/v1/rpc/${name}`,{method:'POST',headers:{'Content-Type':'application/json','apikey':RANKING_CONFIG.publishableKey,'Authorization':`Bearer ${RANKING_CONFIG.publishableKey}`},body:JSON.stringify(payload)});if(!res.ok){const msg=await res.text().catch(()=>'');throw new Error(`${name} failed: ${res.status} ${msg}`.trim())}return res.status===204?null:res.json()}
-  async function submitAndFetchRankingOnce(){if(rankingSent&&rankingFetched)return;const status=$('rankingStatus');const list=$('rankingList');if(!rankingSent){rankingSent=true;status.textContent='ランキング送信中...';try{if(!RANKING_CONFIG.enabled)throw new Error('ランキング設定が未設定です。');await callRpc(RANKING_CONFIG.submitRpc,{p_display_name:game.playerName||'名無し',p_game_slug:RANKING_CONFIG.gameSlug,p_score:game.score,p_client_version:RANKING_CONFIG.clientVersion});status.textContent='ランキング送信に成功しました。ランキング取得中...'}catch(e){console.warn('ranking submit failed',e);status.textContent='ランキング送信に失敗しました。スコアはこの画面で確認できます。';}}
-    if(!rankingFetched){rankingFetched=true;try{const rows=await callRpc(RANKING_CONFIG.rankingRpc,{p_game_slug:RANKING_CONFIG.gameSlug,p_limit:10});renderRankingRows(Array.isArray(rows)?rows:[]);if(list.children.length){status.textContent=status.textContent.includes('失敗')?`${status.textContent} ランキングを取得しました。`:'ランキング送信に成功しました。ランキングを取得しました。'}else{status.textContent+=' ランキングはまだありません。'}}catch(e){console.warn('ranking fetch failed',e);if(!status.textContent.includes('送信に失敗'))status.textContent='ランキング取得に失敗しました。時間をおいて再度お試しください。';}}}
+  function rng(s){const x=Math.sin(s*127.1+311.7)*43758.5453;return x-Math.floor(x)}
+  function roundedRect(c,x,y,w,h,r){if(typeof c.roundRect==='function'){c.beginPath();c.roundRect(x,y,w,h,r);return}const rr=Math.min(r,w/2,h/2);c.beginPath();c.moveTo(x+rr,y);c.lineTo(x+w-rr,y);c.quadraticCurveTo(x+w,y,x+w,y+rr);c.lineTo(x+w,y+h-rr);c.quadraticCurveTo(x+w,y+h,x+w-rr,y+h);c.lineTo(x+rr,y+h);c.quadraticCurveTo(x,y+h,x,y+h-rr);c.lineTo(x,y+rr);c.quadraticCurveTo(x,y,x+rr,y)}
+
+  // ---------- サイズ確定（iOS安定化のためResizeObserver併用） ----------
+  function resize(){
+    const rect=wrap.getBoundingClientRect();
+    const W=Math.max(1,Math.round(rect.width)),H=Math.max(1,Math.round(rect.height));
+    dpr=Math.min(devicePixelRatio||1,2);
+    const cw=Math.max(1,Math.round(W*dpr)),ch=Math.max(1,Math.round(H*dpr));
+    if(canvas.width!==cw)canvas.width=cw;
+    if(canvas.height!==ch)canvas.height=ch;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    view.W=W;view.H=H;view.R=Math.min(W*0.42,150);view.RBALL=Math.max(13,view.R*0.135);
+  }
+
+  // ---------- 状態遷移 ----------
+  function setState(next){
+    state=next;
+    Object.values(screens).forEach(s=>s.classList.remove('active'));
+    gameEl.classList.remove('active');
+    if(next===STATE.PLAYING){gameEl.classList.add('active');resize();reset();startLoop();}
+    else (screens[next]||screens.ERROR).classList.add('active');
+  }
+
+  // ---------- ステージ生成 ----------
+  function makePlatform(i){
+    const n=i+1, y=i*FLOORGAP;
+    const gap=rng(n*1.7)*TAU;
+    const gapHalf=0.52-Math.min(0.17,i*0.0045); // 深いほど穴が少し狭くなる
+    let dCount=0; if(n>=4)dCount=1; if(n>=12)dCount=2; if(n>=20)dCount=3;
+    const dHalf=0.34, danger=[]; let placed=0,att=0,base=rng(n*3.3)*TAU;
+    while(placed<dCount&&att<48){
+      const a=normAngle(base+placed*1.9+rng(n*7.1+att)*1.3); att++;
+      if(Math.abs(angleDiff(a,gap))>gapHalf+dHalf+0.28){danger.push(a);placed++}
+    }
+    const item=(n%3===0)&&dCount<3;
+    return {n,y,gap,gapHalf,danger,dHalf,item,collected:false};
+  }
+  function reset(){
+    rankingSent=rankingFetched=gameOverHandled=false;
+    game.score=0;game.floor=1;game.angle=0;
+    game.platforms=[];for(let i=0;i<MAX_FLOOR;i++)game.platforms.push(makePlatform(i));
+    game.by=-FLOORGAP*0.8;game.bvy=0;
+    game.cameraY=game.by-view.H*0.42;
+    game.effects=[];game.particles=[];game.trail=[];
+    game.combo=0;game.dropBurst=0;game.lastDropAt=0;game.squash=0;game.shake=0;
+    game.pendingFinish=null;game.finalReason='';game.won=false;game.startedAt=performance.now();
+    game.feedbackText='';game.failSY=0;game.input.active=false;
+    acc=0;updateHud();
+  }
+
+  // ---------- スコア・エフェクト ----------
+  function addScore(v,label,x,y){if(state!==STATE.PLAYING)return;game.score+=v;effect(label||('+'+v),x,y,'score');updateHud()}
+  function effect(text,x,y,type){game.effects.push({text,x,y,life:0.85,max:0.85,type:type||'pop'});if(game.effects.length>60)game.effects.splice(0,game.effects.length-60)}
+  function spawn(x,y,n,color,spd,grav,size){for(let i=0;i<n;i++){const a=Math.random()*TAU,s=spd*(0.4+Math.random()*0.8);game.particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-spd*0.3,g:grav,life:0.45+Math.random()*0.3,max:0.75,color,size:size*(0.6+Math.random()*0.7)})}if(game.particles.length>140)game.particles.splice(0,game.particles.length-140)}
+
+  // ---------- 当たり判定（正面セグメント） ----------
+  function segmentAt(p,a){
+    if(Math.abs(angleDiff(a,p.gap))<=p.gapHalf)return 'gap';
+    for(let i=0;i<p.danger.length;i++)if(Math.abs(angleDiff(a,p.danger[i]))<=p.dHalf)return 'danger';
+    return 'safe';
+  }
+  function passFloor(p){
+    const now=performance.now(),cx=view.W/2,sy=p.y-game.cameraY;
+    const quick=now-game.lastDropAt<850;
+    game.combo=quick?game.combo+1:1;
+    game.dropBurst=quick?game.dropBurst+1:1;
+    game.lastDropAt=now;
+    addScore(100,'+100',cx,sy);
+    if(game.combo>=2)addScore((game.combo-1)*50,game.combo+'連 +'+((game.combo-1)*50),cx,sy-24);
+    if(game.dropBurst>=3){addScore(300,'一気落下 +300',cx,sy-46);game.dropBurst=0}
+    if(p.item&&!p.collected){p.collected=true;addScore(50,'+50',cx,sy-12);effect('☀️',cx,sy,'item');spawn(cx,sy,12,'#ffd84d',150,260,4);vibrate(12)}
+    spawn(cx,sy,5,'#ffe9a8',90,420,3);
+    vibrate(14);
+    game.floor++;
+    if(game.floor>=MAX_FLOOR){addScore(3000,'30階 +3000',cx,sy-70);finish(true,'30階到達')}
+  }
+  function bounce(p){
+    game.by=p.y-view.RBALL;game.bvy=-BOUNCEV;
+    game.combo=0;game.dropBurst=0;game.squash=1;
+    spawn(view.W/2,p.y-game.cameraY,6,'#f3d27a',120,440,3);
+    vibrate(8);
+  }
+  function die(p){
+    const cx=view.W/2,sy=p.y-game.cameraY;
+    game.by=p.y-view.RBALL;game.bvy=0;game.failSY=sy;game.shake=1;
+    game.pendingFinish={won:false,reason:'危険床接触',at:performance.now()+380};
+    game.feedbackText='危険帯に接触';
+    effect('危険!',cx,sy,'danger');spawn(cx,sy,16,'#e64980',180,420,4);
+    vibrate(35);
+  }
+
+  // ---------- 物理ステップ（固定タイムステップ） ----------
+  function stepPhysics(dt){
+    const now=performance.now();
+    if(game.pendingFinish){if(now>=game.pendingFinish.at)finish(game.pendingFinish.won,game.pendingFinish.reason);return}
+    if((game.combo||game.dropBurst)&&now-game.lastDropAt>=850){game.combo=0;game.dropBurst=0}
+    game.bvy+=GRAV*dt;if(game.bvy>MAXV)game.bvy=MAXV;
+    game.by+=game.bvy*dt;
+    const p=game.platforms[game.floor-1];
+    if(!p){finish(true,'CLEAR');return}
+    if(game.bvy>0&&game.by+view.RBALL>=p.y){
+      const front=normAngle(Math.PI/2-game.angle);
+      const seg=segmentAt(p,front);
+      if(seg==='gap')passFloor(p);
+      else if(seg==='danger')die(p);
+      else bounce(p);
+    }
+  }
+  function stepAnims(dt){
+    // カメラ追従（落下は速く、跳ね上がりは緩やかに追う）
+    const desired=game.by-view.H*0.42;
+    const k=desired>game.cameraY?Math.min(1,dt*12):Math.min(1,dt*3);
+    game.cameraY+=(desired-game.cameraY)*k;
+    if(game.squash>0){game.squash=Math.max(0,game.squash-dt*6)}
+    if(game.shake>0){game.shake=Math.max(0,game.shake-dt*3)}
+    // 残像
+    if(state===STATE.PLAYING&&!game.pendingFinish){game.trail.push(game.by);if(game.trail.length>7)game.trail.shift()}
+    for(let i=game.effects.length-1;i>=0;i--){const e=game.effects[i];e.life-=dt;e.y-=26*dt;if(e.life<=0)game.effects.splice(i,1)}
+    for(let i=game.particles.length-1;i>=0;i--){const q=game.particles[i];q.vy+=q.g*dt;q.x+=q.vx*dt;q.y+=q.vy*dt;q.life-=dt;if(q.life<=0)game.particles.splice(i,1)}
+  }
+
+  // ---------- 描画 ----------
+  let bgGrad=null,bgH=0;
+  function draw(){
+    const W=view.W,H=view.H;if(H<2)return;
+    ctx.clearRect(0,0,W,H);
+    if(!bgGrad||bgH!==H){bgGrad=ctx.createLinearGradient(0,0,0,H);bgGrad.addColorStop(0,'#fff7d6');bgGrad.addColorStop(.5,'#ffe7a0');bgGrad.addColorStop(1,'#ffd166');bgH=H}
+    ctx.fillStyle=bgGrad;ctx.fillRect(0,0,W,H);
+    ctx.save();
+    if(game.shake>0){const s=game.shake*7;ctx.translate((Math.random()-.5)*s,(Math.random()-.5)*s)}
+    drawPole(W,H);
+    const start=Math.max(0,game.floor-2);
+    for(let i=start;i<start+VISIBLE&&i<MAX_FLOOR;i++)drawPlatform(game.platforms[i]);
+    drawBall(W,H);
+    ctx.restore();
+    drawParticles();
+    drawEffects();
+    drawHints(W,H);
+  }
+  function drawPole(W,H){const cx=W/2,w=Math.max(10,view.R*0.13);ctx.fillStyle='rgba(201,142,28,.22)';roundedRect(ctx,cx-w/2,0,w,H,w/2);ctx.fill()}
+  function ring(cx,cy,R,ry,a0,a1,col,lw){ctx.lineWidth=lw;ctx.strokeStyle=col;ctx.beginPath();ctx.ellipse(cx,cy,R,ry,0,a0,a1);ctx.stroke()}
+  function drawPlatform(p){
+    const W=view.W,H=view.H,R=view.R,ry=R*PERSP,cx=W/2;
+    const planeSY=p.y-game.cameraY;
+    if(planeSY<-ry-40||planeSY>H+ry+40)return;
+    const ecy=planeSY-ry,phi=game.angle;
+    const a0=p.gap+p.gapHalf+phi,a1=p.gap-p.gapHalf+phi+TAU; // 穴以外を一周
+    ctx.lineCap='butt';
+    // 側面（厚み）：暗色を下にずらして先に描く
+    ring(cx,ecy+THICK,R,ry,a0,a1,'#c97e12',14);
+    for(let i=0;i<p.danger.length;i++)ring(cx,ecy+THICK,R,ry,p.danger[i]-p.dHalf+phi,p.danger[i]+p.dHalf+phi,'#a61e54',14);
+    // 上面
+    ring(cx,ecy,R,ry,a0,a1,'#f7b733',14);
+    ring(cx,ecy,R,ry,a0,a1,'#ffe08a',6);
+    for(let i=0;i<p.danger.length;i++){
+      ring(cx,ecy,R,ry,p.danger[i]-p.dHalf+phi,p.danger[i]+p.dHalf+phi,'#e64980',14);
+      ring(cx,ecy,R,ry,p.danger[i]-p.dHalf+phi,p.danger[i]+p.dHalf+phi,'#ff9ec0',5);
+    }
+    // 現在ターゲット床：正面の状態を色で示す（穴=緑 / 危険=赤 / 床=白）
+    if(p.n===game.floor){
+      const seg=segmentAt(p,normAngle(Math.PI/2-phi));
+      const col=seg==='gap'?'rgba(58,200,110,.85)':seg==='danger'?'rgba(230,73,128,.9)':'rgba(255,255,255,.55)';
+      ctx.globalAlpha=.55;ring(cx,ecy,R,ry,Math.PI/2-.26,Math.PI/2+.26,col,22);ctx.globalAlpha=1;
+    }
+    // アイテム（穴の中央に配置）
+    if(p.item){const a=p.gap+phi,ix=cx+R*Math.cos(a),iy=ecy+ry*Math.sin(a);ctx.font='20px serif';ctx.textAlign='center';ctx.fillText(p.collected?'☀️':'🌰',ix,iy+7)}
+    // 階数ラベル（背面側）
+    ctx.fillStyle='rgba(122,77,0,.6)';ctx.font='900 11px system-ui';ctx.textAlign='center';ctx.fillText(p.n+'F',cx,ecy-ry-4);
+  }
+  function drawBall(W,H){
+    const cx=W/2,sy=game.by-game.cameraY,r=view.RBALL;
+    const p=game.platforms[game.floor-1];
+    if(p){const psy=p.y-game.cameraY,dist=Math.max(0,psy-sy),t=Math.max(0,1-dist/240);
+      ctx.globalAlpha=.22*t+.05;ctx.fillStyle='#7a4d00';ctx.beginPath();ctx.ellipse(cx,psy,r*(.7+.5*t),r*PERSP*(.7+.5*t),0,0,TAU);ctx.fill();ctx.globalAlpha=1}
+    for(let i=0;i<game.trail.length;i++){const a=(i+1)/game.trail.length*0.22;ctx.globalAlpha=a;ctx.fillStyle='#ffd34d';ctx.beginPath();ctx.arc(cx,game.trail[i]-game.cameraY,r*(.5+.4*a),0,TAU);ctx.fill()}
+    ctx.globalAlpha=1;
+    let sx=1,syc=1;
+    if(game.squash>0){sx=1+0.35*game.squash;syc=1-0.4*game.squash}
+    else{const st=Math.min(0.22,Math.abs(game.bvy)/3200);syc=1+st;sx=1-st*0.6}
+    drawSun(cx,sy,r,sx,syc);
+  }
+  function drawSun(cx,sy,r,sx,syc){
+    ctx.save();ctx.translate(cx,sy);ctx.scale(sx,syc);
+    const rot=performance.now()*0.001;
+    ctx.fillStyle='#ffc21e';
+    for(let i=0;i<12;i++){ctx.save();ctx.rotate(rot+i*TAU/12);ctx.beginPath();ctx.moveTo(0,-r*1.2);ctx.lineTo(-r*0.16,-r*0.9);ctx.lineTo(r*0.16,-r*0.9);ctx.closePath();ctx.fill();ctx.restore()}
+    const g=ctx.createRadialGradient(-r*0.3,-r*0.3,r*0.2,0,0,r*1.05);
+    g.addColorStop(0,'#fff3b0');g.addColorStop(.6,'#ffce3a');g.addColorStop(1,'#f59f00');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.fill();
+    ctx.lineWidth=2;ctx.strokeStyle='rgba(150,80,0,.22)';ctx.stroke();
+    ctx.fillStyle='#6b3d00';
+    ctx.beginPath();ctx.arc(-r*0.34,-r*0.12,r*0.12,0,TAU);ctx.arc(r*0.34,-r*0.12,r*0.12,0,TAU);ctx.fill();
+    ctx.lineWidth=Math.max(2,r*0.1);ctx.strokeStyle='#6b3d00';ctx.lineCap='round';
+    ctx.beginPath();ctx.arc(0,r*0.06,r*0.42,0.15*Math.PI,0.85*Math.PI);ctx.stroke();
+    ctx.fillStyle='rgba(255,120,60,.32)';ctx.beginPath();ctx.arc(-r*0.5,r*0.2,r*0.13,0,TAU);ctx.arc(r*0.5,r*0.2,r*0.13,0,TAU);ctx.fill();
+    ctx.restore();
+  }
+  function drawParticles(){for(let i=0;i<game.particles.length;i++){const q=game.particles[i];ctx.globalAlpha=Math.max(0,q.life/q.max);ctx.fillStyle=q.color;ctx.beginPath();ctx.arc(q.x,q.y,q.size,0,TAU);ctx.fill()}ctx.globalAlpha=1}
+  function drawEffects(){ctx.textAlign='center';for(let i=0;i<game.effects.length;i++){const e=game.effects[i],pr=e.life/e.max;ctx.globalAlpha=Math.max(0,pr);ctx.font=e.type==='item'?'26px serif':'900 18px system-ui';ctx.fillStyle=e.type==='danger'?'#e64980':'#2b2316';ctx.fillText(e.text,e.x,e.y)}ctx.globalAlpha=1}
+  function drawHints(W,H){
+    if(state!==STATE.PLAYING)return;
+    ctx.save();ctx.textAlign='center';
+    if(game.pendingFinish){
+      ctx.strokeStyle='rgba(230,73,128,.9)';ctx.lineWidth=4;ctx.beginPath();ctx.arc(W/2,game.failSY,30,0,TAU);ctx.stroke();
+      ctx.fillStyle='#c2185b';ctx.font='900 18px system-ui';ctx.fillText(game.feedbackText,W/2,Math.max(40,game.failSY-40));
+      ctx.restore();return;
+    }
+    const lines=[];
+    if(game.combo>=3)lines.push(game.combo+'連続！一気落下チャンス');
+    else if(game.combo>=2)lines.push(game.combo+'連続！');
+    if(game.dropBurst===1)lines.push('連続落下 1/3');
+    else if(game.dropBurst===2)lines.push('あと1回で一気落下');
+    if(lines.length){
+      ctx.fillStyle='rgba(255,255,255,.82)';ctx.strokeStyle='rgba(245,159,0,.55)';ctx.lineWidth=2;
+      const boxH=16+lines.length*22;roundedRect(ctx,W/2-122,12,244,boxH,12);ctx.fill();ctx.stroke();
+      ctx.fillStyle='#7a4d00';ctx.font='900 16px system-ui';lines.forEach((l,i)=>ctx.fillText(l,W/2,34+i*22));
+    }
+    ctx.fillStyle='rgba(90,61,0,.6)';ctx.font='700 12px system-ui';ctx.fillText('左右ドラッグで塔を回転 — 正面のすき間に通そう',W/2,H-14);
+    ctx.restore();
+  }
+
+  // ---------- ループ（固定タイムステップ + フレーム描画） ----------
+  function loop(t){
+    let dt=(t-last)/1000;last=t;if(!(dt>0))dt=0;if(dt>0.05)dt=0.05;
+    if(view.H<2)resize();
+    if(state===STATE.PLAYING){
+      acc+=dt;let steps=0;
+      while(acc>=FIXED&&steps<10){stepPhysics(FIXED);acc-=FIXED;steps++}
+      if(steps>=10)acc=0;
+      stepAnims(dt);
+    }
+    draw();
+    if(state===STATE.PLAYING)rafId=requestAnimationFrame(loop);
+  }
+  function startLoop(){last=performance.now();acc=0;cancelAnimationFrame(rafId);rafId=requestAnimationFrame(loop)}
+
+  // ---------- 結果 ----------
+  function updateHud(){scoreText.textContent=game.score;floorText.textContent=Math.min(game.floor,MAX_FLOOR)+' / '+MAX_FLOOR}
+  function resultComment(won,reason){if(reason==='リタイア')return 'リタイアしました。次はもう少し深く進めます';if(reason==='危険床接触')return '危険帯で終了。正面の色（緑＝穴 / 赤＝危険）を見て回そう';if(won||game.floor>=MAX_FLOOR)return '完全クリア！';if(game.floor>=20)return 'かなり深くまで進みました';if(game.floor>=10)return '次は20階を狙えます';return 'まずは10階を目指しましょう'}
+  function finish(won,reason){
+    if(gameOverHandled)return;gameOverHandled=true;
+    game.pendingFinish=null;game.won=won;game.finalReason=reason;state=STATE.RESULT;
+    wrap.classList.toggle('clear',won);
+    $('resultTitle').textContent=won?'クリア！':'結果';
+    $('resultReason').textContent=reason||(won?'クリア':'終了');
+    $('resultFloor').textContent=Math.min(game.floor,MAX_FLOOR);
+    $('resultScore').textContent=game.score;
+    $('resultComment').textContent=resultComment(won,reason);
+    setState(STATE.RESULT);renderRankingShell();submitAndFetchRankingOnce();
+  }
+
+  // ---------- 名前・シェア ----------
+  function startReady(){const name=playerNameInput.value.trim().slice(0,10);if(!name){playerNameInput.focus();return}try{localStorage.setItem('koroshine:name',name)}catch(e){}game.playerName=name;setState(STATE.READY)}
+  function share(kind){const text=kind==='result'?('コロシャインで'+game.score+'点、'+Math.min(game.floor,MAX_FLOOR)+'階まで到達！'):'コロシャイン - 重力で落ちて跳ねる太陽を、塔を回して穴へ通せ。';const url=PUBLIC_URL,full=text+' '+url;if(navigator.share){navigator.share({title:'コロシャイン',text,url}).catch(()=>{});return}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(full).then(()=>alert('シェア文をコピーしました')).catch(()=>prompt('コピーしてシェアしてください',full));return}prompt('コピーしてシェアしてください',full)}
+
+  // ---------- ランキング ----------
+  async function callRpc(name,payload){const res=await fetch(RANKING_CONFIG.supabaseUrl+'/rest/v1/rpc/'+name,{method:'POST',headers:{'Content-Type':'application/json','apikey':RANKING_CONFIG.publishableKey,'Authorization':'Bearer '+RANKING_CONFIG.publishableKey},body:JSON.stringify(payload)});if(!res.ok){const msg=await res.text().catch(()=>'');throw new Error((name+' failed: '+res.status+' '+msg).trim())}return res.status===204?null:res.json()}
+  async function submitAndFetchRankingOnce(){
+    if(rankingSent&&rankingFetched)return;
+    const status=$('rankingStatus'),list=$('rankingList');
+    if(!rankingSent){rankingSent=true;status.textContent='ランキング送信中...';
+      try{if(!RANKING_CONFIG.enabled)throw new Error('ランキング設定が未設定です。');
+        await callRpc(RANKING_CONFIG.submitRpc,{p_display_name:game.playerName||'名無し',p_game_slug:RANKING_CONFIG.gameSlug,p_score:game.score,p_client_version:RANKING_CONFIG.clientVersion});
+        status.textContent='ランキング送信に成功しました。ランキング取得中...';
+      }catch(e){console.warn('ranking submit failed',e);status.textContent='ランキング送信に失敗しました。スコアはこの画面で確認できます。';}}
+    if(!rankingFetched){rankingFetched=true;
+      try{const rows=await callRpc(RANKING_CONFIG.rankingRpc,{p_game_slug:RANKING_CONFIG.gameSlug,p_limit:10});
+        renderRankingRows(Array.isArray(rows)?rows:[]);
+        if(list.children.length)status.textContent=status.textContent.includes('失敗')?(status.textContent+' ランキングを取得しました。'):'ランキング送信に成功しました。ランキングを取得しました。';
+        else status.textContent+=' ランキングはまだありません。';
+      }catch(e){console.warn('ranking fetch failed',e);if(!status.textContent.includes('送信に失敗'))status.textContent='ランキング取得に失敗しました。時間をおいて再度お試しください。';}}
+  }
   function renderRankingShell(){$('rankingStatus').textContent='ランキング送信準備中...';$('rankingList').replaceChildren()}
-  function renderRankingRows(rows){const list=$('rankingList');list.replaceChildren(...rows.slice(0,10).map((r,i)=>{const li=document.createElement('li');const rank=document.createElement('span');rank.textContent=`${r.rank||r.ranking||i+1}.`;const name=document.createElement('span');name.textContent=r.display_name||r.player_name||r.name||'名無し';const score=document.createElement('span');score.textContent=Math.round(Number(r.score||r.best_score||0));li.append(rank,name,score);return li}))}
+  function renderRankingRows(rows){const list=$('rankingList');list.replaceChildren(...rows.slice(0,10).map((r,i)=>{const li=document.createElement('li');const rank=document.createElement('span');rank.textContent=(r.rank||r.ranking||i+1)+'.';const name=document.createElement('span');name.textContent=r.display_name||r.player_name||r.name||'名無し';const score=document.createElement('span');score.textContent=Math.round(Number(r.score||r.best_score||0));li.append(rank,name,score);return li}))}
+
+  // ---------- 入力配線 ----------
   function canControlGame(){return state===STATE.PLAYING&&!game.pendingFinish}
-  function wire(){document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>setState(STATE[b.dataset.goto])));document.querySelectorAll('[data-share]').forEach(b=>b.addEventListener('click',()=>share(b.dataset.share)));$('startBtn').onclick=()=>setState(STATE.NAME);$('ruleBtn').onclick=()=>setState(STATE.RULE);$('ruleStartBtn').onclick=()=>setState(STATE.NAME);$('readyBtn').onclick=startReady;playerNameInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();startReady()}});$('playBtn').onclick=()=>{reset();setState(STATE.PLAYING)};$('retryBtn').onclick=()=>{reset();setState(STATE.PLAYING)};$('retireBtn').onclick=()=>{if(!canControlGame())return;finish(false,'リタイア')};wrap.addEventListener('pointerdown',e=>{if(!canControlGame())return;game.input.active=true;game.input.lastX=e.clientX;wrap.setPointerCapture(e.pointerId);vibrate(5)});wrap.addEventListener('pointermove',e=>{if(!game.input.active||!canControlGame())return;const dx=e.clientX-game.input.lastX;game.input.lastX=e.clientX;game.rotation+=dx*0.012});['pointerup','pointercancel'].forEach(type=>wrap.addEventListener(type,()=>{game.input.active=false}));window.addEventListener('resize',resize);document.addEventListener('gesturestart',e=>e.preventDefault());}
-  try{playerNameInput.value=localStorage.getItem('koroshine:name')||'';wire();resize();}catch(e){$('errorMessage').textContent=e.message;setState(STATE.ERROR)}
+  function wire(){
+    document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>setState(STATE[b.dataset.goto])));
+    document.querySelectorAll('[data-share]').forEach(b=>b.addEventListener('click',()=>share(b.dataset.share)));
+    $('startBtn').onclick=()=>setState(STATE.NAME);
+    $('ruleBtn').onclick=()=>setState(STATE.RULE);
+    $('ruleStartBtn').onclick=()=>setState(STATE.NAME);
+    $('readyBtn').onclick=startReady;
+    playerNameInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();startReady()}});
+    $('playBtn').onclick=()=>setState(STATE.PLAYING);
+    $('retryBtn').onclick=()=>setState(STATE.PLAYING);
+    $('retireBtn').onclick=()=>{if(!canControlGame())return;finish(false,'リタイア')};
+    wrap.addEventListener('pointerdown',e=>{if(!canControlGame())return;game.input.active=true;game.input.lastX=e.clientX;try{wrap.setPointerCapture(e.pointerId)}catch(_){}vibrate(5)});
+    wrap.addEventListener('pointermove',e=>{if(!game.input.active||!canControlGame())return;const dx=e.clientX-game.input.lastX;game.input.lastX=e.clientX;game.angle+=dx*SENS});
+    ['pointerup','pointercancel'].forEach(type=>wrap.addEventListener(type,()=>{game.input.active=false}));
+    window.addEventListener('resize',resize);
+    window.addEventListener('orientationchange',()=>setTimeout(resize,150));
+    if(window.visualViewport)window.visualViewport.addEventListener('resize',resize);
+    document.addEventListener('gesturestart',e=>e.preventDefault());
+    if('ResizeObserver'in window){ro=new ResizeObserver(()=>resize());ro.observe(wrap)}
+  }
+
+  // ---------- 起動 ----------
+  try{if(/[?&]debug/.test(location.search)){window.__koro=game;window.__koroForce=(a)=>{game.angle=a};}}catch(e){}
+  try{playerNameInput.value=(localStorage.getItem('koroshine:name')||'');wire();resize();}
+  catch(e){$('errorMessage').textContent=e.message;setState(STATE.ERROR)}
 })();
 </script>
 </body>
