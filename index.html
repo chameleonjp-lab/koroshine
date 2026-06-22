@@ -38,7 +38,7 @@
   const scoreText=$('scoreText'), floorText=$('floorText'), playerNameInput=$('playerName');
   const TAU=Math.PI*2, MAX_FLOOR=30, VISIBLE=7, SEG=8, WS=TAU/SEG;
   // --- 物理 / 描画パラメータ（CSSピクセル・秒） ---
-  const PERSP=0.36, GRAV=2600, MAXV=1700, FIREV=1350, FLOORGAP=128, BOUNCEV=720, SENS=0.0125, THICK=14, FIXED=1/120, FIRE_TIME=0.48;
+  const PERSP=0.36, GRAV=2600, MAXV=1700, FIREV=1350, FLOORGAP=128, BOUNCEV=720, SENS=0.0125, MAX_ANG_V=8.5, ANG_DRAG=15, THICK=14, FIXED=1/120, FIRE_TIME=0.48;
   // --- ゾーン配色（6階ごとに切替・背景は連続補間） ---
   const PAL=[
     {bg1:'#fff3d6',bg2:'#ffce5e',safe:'#ffa726',side:'#c9710c',dgr:'#5b2bd6',dside:'#3f1c9c'},
@@ -52,11 +52,11 @@
   let rankingSent=false,rankingFetched=false,gameOverHandled=false;
   const view={W:1,H:1,R:140,r0:34,RBALL:19};
   const game={
-    score:0,floor:1,angle:0,by:0,bvy:0,cameraY:0,fire:0,
+    score:0,floor:1,angle:0,angularVelocity:0,by:0,bvy:0,cameraY:0,fire:0,
     platforms:[],effects:[],particles:[],splats:[],trail:[],
     combo:0,dropBurst:0,lastDropAt:0,squash:0,shake:0,
     pendingFinish:null,finalReason:'',playerName:'',won:false,startedAt:0,
-    feedbackText:'',failSY:0,input:{active:false,lastX:0}
+    feedbackText:'',failSY:0,failHit:null,passFX:null,debugHit:null,input:{active:false,lastX:0,lastT:0}
   };
 
   // ---------- ユーティリティ ----------
@@ -106,14 +106,14 @@
   }
   function reset(){
     rankingSent=rankingFetched=gameOverHandled=false;
-    game.score=0;game.floor=1;game.angle=0;game.fire=0;
+    game.score=0;game.floor=1;game.angle=0;game.angularVelocity=0;game.fire=0;
     game.platforms=[];for(let i=0;i<MAX_FLOOR;i++)game.platforms.push(makePlatform(i));
     game.by=-FLOORGAP*0.8;game.bvy=0;
     game.cameraY=game.by-view.H*0.42;
     game.effects=[];game.particles=[];game.splats=[];game.trail=[];
     game.combo=0;game.dropBurst=0;game.lastDropAt=0;game.squash=0;game.shake=0;
     game.pendingFinish=null;game.finalReason='';game.won=false;game.startedAt=performance.now();
-    game.feedbackText='';game.failSY=0;game.input.active=false;
+    game.feedbackText='';game.failSY=0;game.failHit=null;game.passFX=null;game.debugHit=null;game.input.active=false;game.input.lastT=0;
     acc=0;updateHud();
   }
 
@@ -123,8 +123,22 @@
   function spawn(x,y,n,color,spd,grav,size){for(let i=0;i<n;i++){const a=Math.random()*TAU,s=spd*(0.4+Math.random()*0.8);game.particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-spd*0.3,g:grav,life:0.45+Math.random()*0.3,max:0.75,color,size:size*(0.6+Math.random()*0.7)})}if(game.particles.length>160)game.particles.splice(0,game.particles.length-160)}
   function splat(x,y,color){game.splats.push({x,y,color,life:0.55,max:0.55,r:view.RBALL*(0.9+Math.random()*0.5)});if(game.splats.length>24)game.splats.shift()}
 
-  // ---------- 当たり判定（正面くさび） ----------
-  function wedgeIndexAt(){return Math.floor(normAngle(Math.PI/2-game.angle)/WS)%SEG}
+  // ---------- 当たり判定（球の幅込み） ----------
+  const DEBUG_MODE=/[?&]debug/.test(location.search);
+  function wedgeIndexAt(a){return Math.floor(normAngle((a==null?Math.PI/2:a)-game.angle)/WS)%SEG}
+  function collisionAt(p){
+    const front=Math.PI/2,span=Math.min(WS*0.44,Math.asin(Math.min(0.95,view.RBALL/Math.max(1,view.R)))*1.15);
+    const center=wedgeIndexAt(front),left=wedgeIndexAt(front-span),right=wedgeIndexAt(front+span);
+    const ct=p.wedges[center],lt=p.wedges[left],rt=p.wedges[right];
+    let result='bounce',wi=center,type=ct;
+    if(ct==='gap')result='pass';
+    else if(ct==='danger')result='danger';
+    else if(lt==='danger'||rt==='danger'){result='danger';wi=lt==='danger'?left:right;type='danger'}
+    else if(lt==='gap'||rt==='gap'){result='edge';wi=lt==='gap'?left:right;type='safe'}
+    const hit={front,span,center,left,right,type,result,wi};
+    if(DEBUG_MODE)game.debugHit=hit;
+    return hit;
+  }
   function igniteFire(cx,sy){game.fire=FIRE_TIME;effect('🔥 ファイアボール!',cx,sy-70,'item');game.shake=Math.max(game.shake,0.7);vibrate(22)}
   function passFloor(p,smashed){
     const now=performance.now(),cx=view.W/2,sy=p.y-game.cameraY;
@@ -137,7 +151,9 @@
     else if(game.combo>=2)addScore((game.combo-1)*50,game.combo+'連 +'+((game.combo-1)*50),cx,sy-24);
     if(game.dropBurst>=3&&game.fire<=0){addScore(300,'一気落下 +300',cx,sy-46);game.dropBurst=0;igniteFire(cx,sy)}
     if(p.item&&!p.collected){p.collected=true;addScore(50,'+50',cx,sy-12);effect('☀️',cx,sy,'item');spawn(cx,sy,12,'#ffd84d',150,260,4);vibrate(12)}
-    spawn(cx,sy,4,'#ffe9a8',80,420,3);
+    game.passFX={x:cx,y:sy,life:0.16,max:0.16,zone:p.zone,gStart:p.gStart,gW:p.gW,angle:game.angle};
+    game.squash=-1;game.shake=Math.max(game.shake,0.18);
+    spawn(cx,sy,14,'#fff3bf',145,390,3);spawn(cx,sy+8,8,'rgba(80,45,0,.55)',80,260,4);
     vibrate(12);
     game.floor++;
     if(game.floor>=MAX_FLOOR){addScore(3000,'30階 +3000',cx,sy-70);finish(true,'30階到達')}
@@ -159,7 +175,7 @@
   }
   function die(p){
     const cx=view.W/2,sy=p.y-game.cameraY,pal=PAL[p.zone];
-    game.by=p.y-view.RBALL;game.bvy=0;game.failSY=sy;game.shake=1;
+    game.by=p.y-view.RBALL;game.bvy=0;game.failSY=sy;game.failHit=collisionAt(p);game.squash=1.15;game.shake=1;
     game.pendingFinish={won:false,reason:'危険床接触',at:performance.now()+380};
     game.feedbackText='危険帯に接触';
     effect('危険!',cx,sy,'danger');spawn(cx,sy,16,pal.dgr,180,420,4);
@@ -178,19 +194,23 @@
     const p=game.platforms[game.floor-1];
     if(!p){finish(true,'CLEAR');return}
     if(game.by+view.RBALL>=p.y&&(game.bvy>0||game.fire>0)){
-      const wi=wedgeIndexAt(),type=p.wedges[wi];
-      if(type==='gap')passFloor(p,false);
-      else if(game.fire>0)smash(p,wi);
-      else if(type==='danger')die(p);
+      const hit=collisionAt(p);
+      if(hit.result==='pass')passFloor(p,false);
+      else if(game.fire>0)smash(p,hit.wi);
+      else if(hit.result==='danger')die(p);
       else bounce(p);
     }
   }
   function stepAnims(dt){
+    game.angularVelocity=Math.max(-MAX_ANG_V,Math.min(MAX_ANG_V,game.angularVelocity));
+    game.angle+=game.angularVelocity*dt;
+    const drag=Math.max(0,1-ANG_DRAG*dt);game.angularVelocity*=drag;if(Math.abs(game.angularVelocity)<0.01)game.angularVelocity=0;
     const desired=game.by-view.H*0.42;
-    const k=desired>game.cameraY?Math.min(1,dt*12):Math.min(1,dt*3);
+    const k=game.passFX?Math.min(1,dt*20):(desired>game.cameraY?Math.min(1,dt*12):Math.min(1,dt*3));
     game.cameraY+=(desired-game.cameraY)*k;
-    if(game.squash>0)game.squash=Math.max(0,game.squash-dt*6);
+    if(game.squash>0)game.squash=Math.max(0,game.squash-dt*6);else if(game.squash<0)game.squash=Math.min(0,game.squash+dt*8);
     if(game.shake>0)game.shake=Math.max(0,game.shake-dt*3);
+    if(game.passFX){game.passFX.life-=dt;if(game.passFX.life<=0)game.passFX=null}
     if(game.fire>0&&Math.random()<0.9){const cx=view.W/2,sy=game.by-game.cameraY;game.particles.push({x:cx+(Math.random()-.5)*view.RBALL,y:sy+(Math.random()-.3)*view.RBALL,vx:(Math.random()-.5)*60,vy:-120-Math.random()*120,g:-40,life:0.3+Math.random()*0.2,max:0.5,color:Math.random()<0.5?'#ff7a18':'#ffd23d',size:3+Math.random()*3})}
     if(state===STATE.PLAYING&&!game.pendingFinish){game.trail.push(game.by);if(game.trail.length>7)game.trail.shift()}
     for(let i=game.effects.length-1;i>=0;i--){const e=game.effects[i];e.life-=dt;e.y-=26*dt;if(e.life<=0)game.effects.splice(i,1)}
@@ -208,6 +228,7 @@
     const start=Math.max(0,game.floor-2);
     for(let i=start;i<start+VISIBLE&&i<MAX_FLOOR;i++)drawPlatform(game.platforms[i]);  // 奥(上)→手前(下)
     drawSplats();
+    drawPassFX();
     drawBall(W,H);
     ctx.restore();
     drawParticles();
@@ -248,6 +269,7 @@
       sectorPath(cx,ecy,R,r0,i*WS+phi,(i+1)*WS+phi,0);
       ctx.fillStyle=t==='danger'?pal.dgrTop:pal.safeTop;ctx.fill();     // 艶込みの上面色を1回で塗る
       if(isTarget&&i===frontWi){ctx.fillStyle='rgba(255,255,255,.28)';ctx.fill()} // 接触くさびを強調
+      if(game.pendingFinish&&game.failHit&&i===game.failHit.wi){ctx.fillStyle='rgba(255,0,50,.45)';ctx.fill();ctx.lineWidth=4;ctx.strokeStyle='rgba(255,20,80,.95)';ctx.stroke()}
     }
     // 階数ラベル（背面側）
     ctx.fillStyle='rgba(60,40,10,.55)';ctx.font='900 11px system-ui';ctx.textAlign='center';ctx.fillText(p.n+'F',cx,ecy-R*PERSP-5);
@@ -255,6 +277,7 @@
     if(p.item){const a=(p.gStart+p.gW/2)*WS+phi,rho=(R+r0)/2;ctx.font='19px serif';ctx.textAlign='center';ctx.fillText(p.collected?'☀️':'🌰',cx+rho*Math.cos(a),ecy+rho*PERSP*Math.sin(a)+6)}
   }
   function drawSplats(){for(let i=0;i<game.splats.length;i++){const s=game.splats[i];ctx.globalAlpha=Math.max(0,s.life/s.max)*0.5;ctx.fillStyle=s.color;ctx.beginPath();ctx.ellipse(s.x,s.y,s.r,s.r*PERSP,0,0,TAU);ctx.fill()}ctx.globalAlpha=1}
+  function drawPassFX(){const f=game.passFX;if(!f)return;const pr=Math.max(0,f.life/f.max),cx=view.W/2,R=view.R,r0=view.r0,ecy=f.y-R*PERSP,pal=PAL[f.zone];ctx.save();ctx.globalAlpha=pr;ctx.shadowBlur=18*pr;ctx.shadowColor='#fff4a3';for(let k=0;k<f.gW;k++){const i=(f.gStart+k)%SEG;sectorPath(cx,ecy,R+5,r0-3,i*WS+f.angle,(i+1)*WS+f.angle,0);ctx.strokeStyle='rgba(255,245,170,.95)';ctx.lineWidth=3;ctx.stroke()}ctx.shadowBlur=0;ctx.fillStyle='rgba(60,35,0,.20)';ctx.beginPath();ctx.ellipse(cx,f.y+10,view.RBALL*1.6,view.RBALL*0.42,0,0,TAU);ctx.fill();ctx.restore();ctx.globalAlpha=1}
   function drawBall(W,H){
     const cx=W/2,sy=game.by-game.cameraY,fire=game.fire>0;
     const r=view.RBALL*(fire?1.18:1);
@@ -264,6 +287,7 @@
     ctx.globalAlpha=1;
     let sx=1,syc=1;
     if(game.squash>0){sx=1+0.35*game.squash;syc=1-0.4*game.squash}
+    else if(game.squash<0){const p=-game.squash;sx=1-0.12*p;syc=1+0.42*p}
     else{const st=Math.min(0.22,Math.abs(game.bvy)/3200);syc=1+st;sx=1-st*0.6}
     ctx.save();ctx.translate(cx,sy);ctx.scale(sx,syc);
     if(fire){const fg=ctx.createRadialGradient(0,0,r*0.2,0,0,r*1.9);fg.addColorStop(0,'rgba(255,240,170,.9)');fg.addColorStop(.5,'rgba(255,140,30,.5)');fg.addColorStop(1,'rgba(255,80,0,0)');ctx.fillStyle=fg;ctx.beginPath();ctx.arc(0,0,r*1.9,0,TAU);ctx.fill()}
@@ -298,6 +322,7 @@
       const boxH=16+lines.length*22;roundedRect(ctx,W/2-128,12,256,boxH,12);ctx.fill();ctx.stroke();
       ctx.fillStyle=game.fire>0?'#d9360a':'#5a3d00';ctx.font='900 16px system-ui';lines.forEach((l,i)=>ctx.fillText(l,W/2,34+i*22));
     }
+    if(DEBUG_MODE&&game.debugHit){const h=game.debugHit;ctx.fillStyle='rgba(0,0,0,.62)';roundedRect(ctx,8,H-74,Math.min(W-16,310),50,8);ctx.fill();ctx.fillStyle='#fff';ctx.font='700 11px monospace';ctx.textAlign='left';ctx.fillText('hit: '+h.result+' c:'+h.center+' l:'+h.left+' r:'+h.right+' wi:'+h.wi,18,H-50);ctx.fillText('angle:'+normAngle(Math.PI/2-game.angle).toFixed(2)+' span:'+h.span.toFixed(2),18,H-32);ctx.textAlign='center'}
     ctx.fillStyle='rgba(40,30,10,.55)';ctx.font='700 12px system-ui';ctx.fillText('左右ドラッグで塔を回転 — 正面のすき間に通そう',W/2,H-14);
     ctx.restore();
   }
@@ -369,8 +394,8 @@
     $('playBtn').onclick=()=>setState(STATE.PLAYING);
     $('retryBtn').onclick=()=>setState(STATE.PLAYING);
     $('retireBtn').onclick=()=>{if(!canControlGame())return;if(!confirm('リタイアして結果画面へ進みますか？'))return;if(!canControlGame())return;finish(false,'リタイア')};
-    wrap.addEventListener('pointerdown',e=>{if(!canControlGame())return;game.input.active=true;game.input.lastX=e.clientX;try{wrap.setPointerCapture(e.pointerId)}catch(_){}vibrate(5)});
-    wrap.addEventListener('pointermove',e=>{if(!game.input.active||!canControlGame())return;const dx=e.clientX-game.input.lastX;game.input.lastX=e.clientX;game.angle+=dx*SENS});
+    wrap.addEventListener('pointerdown',e=>{if(!canControlGame())return;game.input.active=true;game.input.lastX=e.clientX;game.input.lastT=performance.now();game.angularVelocity*=0.35;try{wrap.setPointerCapture(e.pointerId)}catch(_){}vibrate(5)});
+    wrap.addEventListener('pointermove',e=>{if(!game.input.active||!canControlGame())return;const now=performance.now(),dx=e.clientX-game.input.lastX,dt=Math.max(0.012,Math.min(0.06,(now-game.input.lastT)/1000));game.input.lastX=e.clientX;game.input.lastT=now;const target=Math.max(-MAX_ANG_V,Math.min(MAX_ANG_V,dx*SENS/dt));game.angularVelocity=game.angularVelocity*0.45+target*0.55});
     ['pointerup','pointercancel'].forEach(type=>wrap.addEventListener(type,()=>{game.input.active=false}));
     window.addEventListener('resize',resize);
     window.addEventListener('orientationchange',()=>setTimeout(resize,150));
@@ -380,7 +405,7 @@
   }
 
   // ---------- 起動 ----------
-  try{if(/[?&]debug/.test(location.search)){window.__koro=game;window.__koroForce=(a)=>{game.angle=a};}}catch(e){}
+  try{if(DEBUG_MODE){window.__koro=game;window.__koroForce=(a)=>{game.angle=a};}}catch(e){}
   try{playerNameInput.value=(localStorage.getItem('koroshine:name')||'');wire();resize();}
   catch(e){$('errorMessage').textContent=e.message;setState(STATE.ERROR)}
 })();
