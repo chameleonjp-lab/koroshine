@@ -38,7 +38,7 @@
   const scoreText=$('scoreText'), floorText=$('floorText'), playerNameInput=$('playerName');
   const TAU=Math.PI*2, MAX_FLOOR=30, VISIBLE=7, SEG=8, WS=TAU/SEG;
   // --- 物理 / 描画パラメータ（CSSピクセル・秒） ---
-  const PERSP=0.36, GRAV=2600, MAXV=1700, FIREV=1350, FLOORGAP=128, BOUNCEV=720, SENS=0.0125, MAX_ANG_V=8.5, ANG_DRAG=15, THICK=14, FIXED=1/120, FIRE_FLOORS=6;
+  const PERSP=0.36, GRAV=2600, MAXV=1700, FIREV=1350, FLOORGAP=128, BOUNCEV=720, SENS=0.0125, MAX_STEP=0.22, THICK=14, FIXED=1/120, FIRE_FLOORS=6;
   // --- ゾーン配色（6階ごとに切替・背景は連続補間） ---
   const PAL=[
     {bg1:'#fff3d6',bg2:'#ffce5e',safe:'#ffa726',side:'#c9710c',dgr:'#5b2bd6',dside:'#3f1c9c'},
@@ -52,16 +52,17 @@
   let rankingSent=false,rankingFetched=false,gameOverHandled=false;
   const view={W:1,H:1,R:140,r0:34,RBALL:19};
   const game={
-    score:0,floor:1,angle:0,angularVelocity:0,by:0,bvy:0,cameraY:0,fire:0,
+    score:0,floor:1,angle:0,by:0,bvy:0,cameraY:0,fire:0,
     platforms:[],effects:[],particles:[],splats:[],trail:[],
-    combo:0,dropBurst:0,lastDropAt:0,squash:0,shake:0,
+    combo:0,dropBurst:0,lastDropAt:-10,squash:0,shake:0,inGameTime:0,seed:1,dragDX:0,lastDragStep:0,
     pendingFinish:null,finalReason:'',playerName:'',won:false,startedAt:0,
-    feedbackText:'',failSY:0,failHit:null,passFX:null,debugHit:null,input:{active:false,lastX:0,lastT:0}
+    feedbackText:'',failSY:0,failHit:null,passFX:null,debugHit:null,input:{active:false,lastX:0}
   };
 
   // ---------- ユーティリティ ----------
   function vibrate(ms){if(navigator.vibrate)try{navigator.vibrate(ms)}catch(e){}}
   function normAngle(a){a%=TAU;return a<0?a+TAU:a}
+  function mod(a,m){return ((a%m)+m)%m}
   function rng(s){const x=Math.sin(s*127.1+311.7)*43758.5453;return x-Math.floor(x)}
   function hx(c){return [parseInt(c.slice(1,3),16),parseInt(c.slice(3,5),16),parseInt(c.slice(5,7),16)]}
   function mix(a,b,t){return 'rgb('+Math.round(a[0]+(b[0]-a[0])*t)+','+Math.round(a[1]+(b[1]-a[1])*t)+','+Math.round(a[2]+(b[2]-a[2])*t)+')'}
@@ -91,30 +92,46 @@
   }
 
   // ---------- ステージ生成（くさび方式） ----------
-  function makePlatform(i){
-    const n=i+1, y=i*FLOORGAP, wedges=new Array(SEG).fill('safe');
-    const gW=(n<=4)?2:(rng(n*5.1)<0.5?2:1);                 // 穴の幅（浅い階は広め）
-    const gStart=Math.floor(rng(n*1.7)*SEG);
-    for(let k=0;k<gW;k++)wedges[(gStart+k)%SEG]='gap';
-    let dCount=0; if(n>=4)dCount=1; if(n>=10)dCount=2; if(n>=18)dCount=3; if(n>=26)dCount=4;
-    let placed=0,att=0;
-    while(placed<dCount&&att<60){
-      const wi=Math.floor(rng(n*7.3+att*1.13)*SEG); att++;
-      if(wedges[wi]==='safe'){wedges[wi]='danger';placed++}
+  // プレイごとのシード + 階層ルールでステージ生成（毎回違う＆難易度カーブを制御）
+  function makeStage(seed){
+    const plats=[]; let prevGap=Math.floor(rng(seed+7.77)*SEG);
+    for(let i=0;i<MAX_FLOOR;i++){
+      const n=i+1, y=i*FLOORGAP, w=new Array(SEG).fill('safe');
+      // ルール3 穴幅: 序盤は広め / 20階以降は必ず1マス（終盤の緊張感）
+      const gW=(n<=4)?2:(n>=20)?1:(rng(seed+n*5.1)<0.5?2:1);
+      // ルール1 直前の穴との角度ズレ: 1〜10階は±1で連続落下を誘発、11階以降は真裏付近へ大きくズラす
+      let gStart;
+      if(n===1)gStart=prevGap;
+      else if(n<=10)gStart=mod(prevGap+(Math.floor(rng(seed+n*1.7)*3)-1),SEG);
+      else gStart=mod(prevGap+(SEG>>1)+(Math.floor(rng(seed+n*2.3)*3)-1),SEG);
+      for(let k=0;k<gW;k++)w[mod(gStart+k,SEG)]='gap';
+      // 危険帯数（深いほど増加）
+      let dCount=0; if(n>=4)dCount=1; if(n>=10)dCount=2; if(n>=18)dCount=3; if(n>=26)dCount=4;
+      // ルール2 確定配置: まず穴のすぐ隣（ミスしやすい箇所）を危険に、残りはシードで散らす
+      const tryD=wi=>{if(w[wi]==='safe'){w[wi]='danger';return true}return false};
+      let placed=0;
+      if(dCount>0){const side=rng(seed+n*3.3)<0.5?mod(gStart-1,SEG):mod(gStart+gW,SEG);if(tryD(side))placed++}
+      let att=0;
+      while(placed<dCount&&att<40){const wi=Math.floor(rng(seed+n*7.3+att*1.13)*SEG);att++;if(tryD(wi))placed++}
+      // 詰み防止: 穴の両隣が両方危険なら片方を安全へ戻す（必ず通過できる肩を残す）
+      const l=mod(gStart-1,SEG),r=mod(gStart+gW,SEG);
+      if(w[l]==='danger'&&w[r]==='danger')w[rng(seed+n*9.1)<0.5?l:r]='safe';
+      plats.push({n,y,wedges:w,gStart,gW,item:(n%3===0),collected:false,zone:zoneOf(n)});
+      prevGap=gStart;
     }
-    const item=(n%3===0);
-    return {n,y,wedges,gStart,gW,item,collected:false,zone:zoneOf(n)};
+    return plats;
   }
   function reset(){
     rankingSent=rankingFetched=gameOverHandled=false;
-    game.score=0;game.floor=1;game.angle=0;game.angularVelocity=0;game.fire=0;
-    game.platforms=[];for(let i=0;i<MAX_FLOOR;i++)game.platforms.push(makePlatform(i));
+    game.score=0;game.floor=1;game.angle=0;game.fire=0;
+    game.seed=Math.random()*997+1;game.inGameTime=0;                 // プレイごとに異なるステージ＋ゲーム内時間をリセット
+    game.platforms=makeStage(game.seed);
     game.by=-FLOORGAP*0.8;game.bvy=0;
     game.cameraY=game.by-view.H*0.42;
     game.effects=[];game.particles=[];game.splats=[];game.trail=[];
-    game.combo=0;game.dropBurst=0;game.lastDropAt=0;game.squash=0;game.shake=0;
+    game.combo=0;game.dropBurst=0;game.lastDropAt=-10;game.squash=0;game.shake=0;game.dragDX=0;game.lastDragStep=0;
     game.pendingFinish=null;game.finalReason='';game.won=false;game.startedAt=performance.now();
-    game.feedbackText='';game.failSY=0;game.failHit=null;game.passFX=null;game.debugHit=null;game.input.active=false;game.input.lastT=0;
+    game.feedbackText='';game.failSY=0;game.failHit=null;game.passFX=null;game.debugHit=null;game.input.active=false;
     acc=0;updateHud();
   }
 
@@ -142,8 +159,8 @@
   }
   function igniteFire(cx,sy){game.fire=FIRE_FLOORS;effect('🔥 ファイアボール!',cx,sy-70,'item');game.shake=Math.max(game.shake,0.7);vibrate(22)} // 残り破壊階数(=6)
   function passFloor(p,smashed){
-    const now=performance.now(),cx=view.W/2,sy=p.y-game.cameraY,wasFiring=game.fire>0;
-    const quick=(now-game.lastDropAt<850)||wasFiring;
+    const now=game.inGameTime,cx=view.W/2,sy=p.y-game.cameraY,wasFiring=game.fire>0;
+    const quick=(now-game.lastDropAt<0.85)||wasFiring;
     game.combo=quick?game.combo+1:1;
     game.dropBurst=quick?game.dropBurst+1:1;
     game.lastDropAt=now;
@@ -177,8 +194,8 @@
   }
   function die(p){
     const cx=view.W/2,sy=p.y-game.cameraY,pal=PAL[p.zone];
-    game.by=p.y-view.RBALL;game.bvy=0;game.failSY=sy;game.failHit=collisionAt(p);game.squash=1.15;game.shake=1;
-    game.pendingFinish={won:false,reason:'危険床接触',at:performance.now()+380};
+    game.by=p.y-view.RBALL;game.bvy=0;game.failSY=sy;game.failHit=collisionAt(p);game.squash=1.15;game.shake=1;game.lastDragStep=0;
+    game.pendingFinish={won:false,reason:'危険床接触',at:game.inGameTime+0.4};
     game.feedbackText='危険帯に接触';
     effect('危険!',cx,sy,'danger');spawn(cx,sy,16,pal.dgr,180,420,4);
     vibrate(35);
@@ -186,9 +203,10 @@
 
   // ---------- 物理ステップ（固定タイムステップ） ----------
   function stepPhysics(dt){
-    const now=performance.now();
+    game.inGameTime+=dt;                                              // ゲーム内時間（実時間に依存しない＝タブ切替でコンボが消えない）
+    const now=game.inGameTime;
     if(game.pendingFinish){if(now>=game.pendingFinish.at)finish(game.pendingFinish.won,game.pendingFinish.reason);return}
-    if(game.fire<=0&&(game.combo||game.dropBurst)&&now-game.lastDropAt>=850){game.combo=0;game.dropBurst=0} // ファイアは階数制（時間で消えない）
+    if(game.fire<=0&&(game.combo||game.dropBurst)&&now-game.lastDropAt>=0.85){game.combo=0;game.dropBurst=0} // ファイアは階数制（時間で消えない）
     game.bvy+=GRAV*dt;if(game.bvy>MAXV)game.bvy=MAXV;
     const vy=game.fire>0?Math.max(game.bvy,FIREV):game.bvy;
     game.by+=vy*dt;
@@ -203,9 +221,9 @@
     }
   }
   function stepAnims(dt){
-    game.angularVelocity=Math.max(-MAX_ANG_V,Math.min(MAX_ANG_V,game.angularVelocity));
-    game.angle+=game.angularVelocity*dt;
-    const drag=Math.max(0,1-ANG_DRAG*dt);game.angularVelocity*=drag;if(Math.abs(game.angularVelocity)<0.01)game.angularVelocity=0;
+    // 回転: ドラッグ中はpointermoveで指の移動を直接反映済み（dt非依存で吸い付く）。ここでは離した後の軽い慣性のみ。
+    if(game.input.active){game.lastDragStep=game.dragDX*SENS;game.dragDX=0;}
+    else if(game.lastDragStep){const step=Math.max(-MAX_STEP,Math.min(MAX_STEP,game.lastDragStep));game.angle+=step;game.lastDragStep*=0.86;if(Math.abs(game.lastDragStep)<0.0008)game.lastDragStep=0;}
     const desired=game.by-view.H*0.42;
     const k=game.passFX?Math.min(1,dt*20):(desired>game.cameraY?Math.min(1,dt*12):Math.min(1,dt*3));
     game.cameraY+=(desired-game.cameraY)*k;
@@ -398,8 +416,8 @@
     $('playBtn').onclick=()=>setState(STATE.PLAYING);
     $('retryBtn').onclick=()=>setState(STATE.PLAYING);
     $('retireBtn').onclick=()=>{if(!canControlGame())return;if(!confirm('リタイアして結果画面へ進みますか？'))return;if(!canControlGame())return;finish(false,'リタイア')};
-    wrap.addEventListener('pointerdown',e=>{if(!canControlGame())return;game.input.active=true;game.input.lastX=e.clientX;game.input.lastT=performance.now();game.angularVelocity*=0.35;try{wrap.setPointerCapture(e.pointerId)}catch(_){}vibrate(5)});
-    wrap.addEventListener('pointermove',e=>{if(!game.input.active||!canControlGame())return;const now=performance.now(),dx=e.clientX-game.input.lastX,dt=Math.max(0.012,Math.min(0.06,(now-game.input.lastT)/1000));game.input.lastX=e.clientX;game.input.lastT=now;const target=Math.max(-MAX_ANG_V,Math.min(MAX_ANG_V,dx*SENS/dt));game.angularVelocity=game.angularVelocity*0.45+target*0.55});
+    wrap.addEventListener('pointerdown',e=>{if(!canControlGame())return;game.input.active=true;game.input.lastX=e.clientX;game.dragDX=0;game.lastDragStep=0;try{wrap.setPointerCapture(e.pointerId)}catch(_){}vibrate(5)});
+    wrap.addEventListener('pointermove',e=>{if(!game.input.active||!canControlGame())return;const dx=e.clientX-game.input.lastX;game.input.lastX=e.clientX;game.angle+=dx*SENS;game.dragDX+=dx;}); // 指の移動ピクセル×固定係数を直接反映（dt割り算なし＝端末安定）
     ['pointerup','pointercancel'].forEach(type=>wrap.addEventListener(type,()=>{game.input.active=false}));
     window.addEventListener('resize',resize);
     window.addEventListener('orientationchange',()=>setTimeout(resize,150));
