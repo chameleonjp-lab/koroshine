@@ -13,7 +13,7 @@
   <title>コロシャイン</title>
   <style>
     :root{--bg:#fff7cf;--ink:#2b2316;--accent:#f59f00;--danger:#e64980;--safe:#ffe066;--panel:rgba(255,255,255,.86);--shadow:0 14px 34px rgba(91,59,0,.18)}
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;min-height:100%;overflow-x:hidden;overscroll-behavior:none;background:linear-gradient(#fff7d6,#ffd166);color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:manipulation;user-select:none;-webkit-user-select:none}body{min-height:100vh;min-height:100dvh;padding:env(safe-area-inset-top) 10px env(safe-area-inset-bottom);display:flex;justify-content:center}.app{width:min(100%,430px);min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;gap:8px}.screen{display:none;flex:1;align-items:center;justify-content:center}.screen.active{display:flex}#result.active{align-items:flex-start;justify-content:center;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 0;min-height:100vh;min-height:100dvh}#result.active .card{margin:auto 0}.card{width:100%;background:var(--panel);border:2px solid rgba(255,184,0,.45);border-radius:22px;box-shadow:var(--shadow);padding:18px;text-align:center}h1{font-size:clamp(2.4rem,13vw,4.2rem);line-height:.95;margin:0 0 8px;text-shadow:0 4px 0 #ffd43b}h2{margin:0 0 10px;font-size:1.5rem}.lead{font-weight:800;font-size:1.05rem}.buttons{display:grid;gap:10px;margin-top:14px}button,.button{min-height:46px;border:0;border-radius:999px;padding:10px 16px;background:var(--ink);color:#fff;font-weight:900;font-size:1rem;box-shadow:0 6px 0 rgba(0,0,0,.18);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}button:active,.button:active{transform:translateY(2px);box-shadow:0 3px 0 rgba(0,0,0,.18)}button.secondary{background:#fff3bf;color:#3b2f16;border:2px solid #fab005}button.danger{background:var(--danger)}input{width:100%;min-height:48px;border-radius:14px;border:2px solid #fab005;padding:10px 12px;font-size:16px;font-weight:800;text-align:center;background:white;color:var(--ink)}.game{display:none;flex:1;flex-direction:column;gap:6px;min-height:100vh;min-height:100dvh}.game.active{display:flex}.hud{display:grid;grid-template-columns:1fr 1fr auto;gap:6px;align-items:center;background:rgba(255,255,255,.74);border-radius:16px;padding:7px 8px;font-weight:900;box-shadow:var(--shadow)}.hud span{display:block;font-size:.78rem;color:#6b5200}.hud strong{font-size:1rem}.canvas-wrap{position:relative;flex:1 1 auto;min-height:60vh;border-radius:20px;overflow:hidden;background:linear-gradient(#fff9db,#ffec99);box-shadow:var(--shadow);touch-action:none}canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}.hint{min-height:34px;text-align:center;font-weight:800;font-size:.88rem;background:rgba(255,255,255,.65);border-radius:14px;padding:8px}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stat{background:#fff3bf;border-radius:14px;padding:10px;font-weight:900}.notice{margin-top:10px;border-radius:14px;padding:10px;background:#fff3bf;color:#5c3d00;font-weight:800}.ranking{margin:10px 0 0;padding:0;list-style:none;text-align:left}.ranking li{display:grid;grid-template-columns:2.2em 1fr auto;gap:8px;padding:8px;border-bottom:1px solid rgba(0,0,0,.08);font-weight:800}.rules{text-align:left;line-height:1.65}.shake{animation:shake .28s linear}.flash{animation:flash .55s ease}.clear{animation:clearGlow .9s ease-in-out 2}@keyframes shake{25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}@keyframes flash{50%{filter:brightness(1.35) saturate(1.3)}}@keyframes clearGlow{50%{filter:drop-shadow(0 0 18px #ffd43b)}}@media(max-width:340px){.card{padding:14px}.hud{grid-template-columns:1fr 1fr}.hud button{grid-column:1/-1;min-height:40px}.lead{font-size:.98rem}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;min-height:100%;overflow-x:hidden;overscroll-behavior:none;background:linear-gradient(#fff7d6,#ffd166);color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;touch-action:manipulation;user-select:none;-webkit-user-select:none}body{min-height:100vh;min-height:100dvh;padding:env(safe-area-inset-top) 10px env(safe-area-inset-bottom);display:flex;justify-content:center}.app{width:min(100%,430px);min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;gap:8px}.screen{display:none;flex:1;align-items:center;justify-content:center}.screen.active{display:flex}#result.active{align-items:flex-start;justify-content:center;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 0;min-height:100vh;min-height:100dvh}#result.active .card{margin:auto 0}.card{width:100%;background:var(--panel);border:2px solid rgba(255,184,0,.45);border-radius:22px;box-shadow:var(--shadow);padding:18px;text-align:center}h1{font-size:clamp(2.4rem,13vw,4.2rem);line-height:.95;margin:0 0 8px;text-shadow:0 4px 0 #ffd43b}h2{margin:0 0 10px;font-size:1.5rem}.lead{font-weight:800;font-size:1.05rem}.buttons{display:grid;gap:10px;margin-top:14px}button,.button{min-height:46px;border:0;border-radius:999px;padding:10px 16px;background:var(--ink);color:#fff;font-weight:900;font-size:1rem;box-shadow:0 6px 0 rgba(0,0,0,.18);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}button:active,.button:active{transform:translateY(2px);box-shadow:0 3px 0 rgba(0,0,0,.18)}button.secondary{background:#fff3bf;color:#3b2f16;border:2px solid #fab005}button.danger{background:var(--danger)}input{width:100%;min-height:48px;border-radius:14px;border:2px solid #fab005;padding:10px 12px;font-size:16px;font-weight:800;text-align:center;background:white;color:var(--ink)}.game{display:none;flex:1;flex-direction:column;gap:6px;min-height:100vh;min-height:100dvh}.game.active{display:flex}html.playing{overscroll-behavior:none;touch-action:none}html.playing body{position:fixed;inset:0;width:100%;height:100%;overflow:hidden;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);touch-action:none}.hud{display:grid;grid-template-columns:1fr 1fr auto;gap:6px;align-items:center;background:rgba(255,255,255,.74);border-radius:16px;padding:7px 8px;font-weight:900;box-shadow:var(--shadow)}.hud span{display:block;font-size:.78rem;color:#6b5200}.hud strong{font-size:1rem}.canvas-wrap{position:relative;flex:1 1 auto;min-height:60vh;border-radius:20px;overflow:hidden;background:linear-gradient(#fff9db,#ffec99);box-shadow:var(--shadow);touch-action:none}canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}.hint{min-height:34px;text-align:center;font-weight:800;font-size:.88rem;background:rgba(255,255,255,.65);border-radius:14px;padding:8px}.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stat{background:#fff3bf;border-radius:14px;padding:10px;font-weight:900}.notice{margin-top:10px;border-radius:14px;padding:10px;background:#fff3bf;color:#5c3d00;font-weight:800}.ranking{margin:10px 0 0;padding:0;list-style:none;text-align:left}.ranking li{display:grid;grid-template-columns:2.2em 1fr auto;gap:8px;padding:8px;border-bottom:1px solid rgba(0,0,0,.08);font-weight:800}.rules{text-align:left;line-height:1.65}.shake{animation:shake .28s linear}.flash{animation:flash .55s ease}.clear{animation:clearGlow .9s ease-in-out 2}@keyframes shake{25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}@keyframes flash{50%{filter:brightness(1.35) saturate(1.3)}}@keyframes clearGlow{50%{filter:drop-shadow(0 0 18px #ffd43b)}}@media(max-width:340px){.card{padding:14px}.hud{grid-template-columns:1fr 1fr}.hud button{grid-column:1/-1;min-height:40px}.lead{font-size:.98rem}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
   </style>
 </head>
 <body>
@@ -39,6 +39,7 @@
   const TAU=Math.PI*2, MAX_FLOOR=30, VISIBLE=7, SEG=8, WS=TAU/SEG;
   // --- 物理 / 描画パラメータ（CSSピクセル・秒） ---
   const PERSP=0.36, GRAV=2600, MAXV=1700, FIREV=1350, FLOORGAP=128, BOUNCEV=720, SENS=0.0125, MAX_STEP=0.22, THICK=14, FIXED=1/120, FIRE_FLOORS=6;
+  const SWIPE_GAIN_K=0.03, SWIPE_GAIN_MAX=2.2, STEP_CAP=1.2;   // スワイプ速度ゲイン（速いほど大きく回す。1イベントはSTEP_CAPで上限）
   // --- ゾーン配色（6階ごとに切替・背景は連続補間） ---
   const PAL=[
     {bg1:'#fff3d6',bg2:'#ffce5e',safe:'#ffa726',side:'#c9710c',dgr:'#5b2bd6',dside:'#3f1c9c'},
@@ -54,7 +55,7 @@
   const game={
     score:0,floor:1,angle:0,by:0,bvy:0,cameraY:0,fire:0,
     platforms:[],effects:[],particles:[],splats:[],trail:[],
-    combo:0,dropBurst:0,lastDropAt:-10,squash:0,shake:0,inGameTime:0,seed:1,dragDX:0,lastDragStep:0,
+    combo:0,dropBurst:0,lastDropAt:-10,squash:0,shake:0,inGameTime:0,seed:1,dragStep:0,lastDragStep:0,
     pendingFinish:null,finalReason:'',playerName:'',won:false,startedAt:0,
     feedbackText:'',failSY:0,failHit:null,passFX:null,debugHit:null,input:{active:false,lastX:0}
   };
@@ -87,8 +88,8 @@
     state=next;
     Object.values(screens).forEach(s=>s.classList.remove('active'));
     gameEl.classList.remove('active');
-    if(next===STATE.PLAYING){gameEl.classList.add('active');resize();reset();startLoop();}
-    else (screens[next]||screens.ERROR).classList.add('active');
+    if(next===STATE.PLAYING){document.documentElement.classList.add('playing');gameEl.classList.add('active');resize();reset();startLoop();}
+    else {document.documentElement.classList.remove('playing');(screens[next]||screens.ERROR).classList.add('active');}
   }
 
   // ---------- ステージ生成（くさび方式） ----------
@@ -103,10 +104,10 @@
       let gStart;
       if(n===1)gStart=prevGap;
       else if(n<=10)gStart=mod(prevGap+(Math.floor(rng(seed+n*1.7)*3)-1),SEG);
-      else gStart=mod(prevGap+(SEG>>1)+(Math.floor(rng(seed+n*2.3)*3)-1),SEG);
+      else{const mag=(rng(seed+n*2.3)<0.5?2:3),dir=(rng(seed+n*4.7)<0.5?1:-1);gStart=mod(prevGap+mag*dir,SEG);} // 中盤は2〜3ブロックの中程度ズレ（素早い回転で届く範囲。真裏で詰ませない）
       for(let k=0;k<gW;k++)w[mod(gStart+k,SEG)]='gap';
       // 危険帯数（深いほど増加）
-      let dCount=0; if(n>=4)dCount=1; if(n>=10)dCount=2; if(n>=18)dCount=3; if(n>=26)dCount=4;
+      let dCount=0; if(n>=4)dCount=1; if(n>=12)dCount=2; if(n>=22)dCount=3; // 危険帯は最大3（一面赤で詰まないよう安全な着地余地を確保）
       // ルール2 確定配置: まず穴のすぐ隣（ミスしやすい箇所）を危険に、残りはシードで散らす
       const tryD=wi=>{if(w[wi]==='safe'){w[wi]='danger';return true}return false};
       let placed=0;
@@ -129,7 +130,7 @@
     game.by=-FLOORGAP*0.8;game.bvy=0;
     game.cameraY=game.by-view.H*0.42;
     game.effects=[];game.particles=[];game.splats=[];game.trail=[];
-    game.combo=0;game.dropBurst=0;game.lastDropAt=-10;game.squash=0;game.shake=0;game.dragDX=0;game.lastDragStep=0;
+    game.combo=0;game.dropBurst=0;game.lastDropAt=-10;game.squash=0;game.shake=0;game.dragStep=0;game.lastDragStep=0;
     game.pendingFinish=null;game.finalReason='';game.won=false;game.startedAt=performance.now();
     game.feedbackText='';game.failSY=0;game.failHit=null;game.passFX=null;game.debugHit=null;game.input.active=false;
     acc=0;updateHud();
@@ -222,7 +223,7 @@
   }
   function stepAnims(dt){
     // 回転: ドラッグ中はpointermoveで指の移動を直接反映済み（dt非依存で吸い付く）。ここでは離した後の軽い慣性のみ。
-    if(game.input.active){game.lastDragStep=game.dragDX*SENS;game.dragDX=0;}
+    if(game.input.active){game.lastDragStep=game.dragStep;game.dragStep=0;}
     else if(game.lastDragStep){const step=Math.max(-MAX_STEP,Math.min(MAX_STEP,game.lastDragStep));game.angle+=step;game.lastDragStep*=0.86;if(Math.abs(game.lastDragStep)<0.0008)game.lastDragStep=0;}
     const desired=game.by-view.H*0.42;
     const k=game.passFX?Math.min(1,dt*20):(desired>game.cameraY?Math.min(1,dt*12):Math.min(1,dt*3));
@@ -416,13 +417,18 @@
     $('playBtn').onclick=()=>setState(STATE.PLAYING);
     $('retryBtn').onclick=()=>setState(STATE.PLAYING);
     $('retireBtn').onclick=()=>{if(!canControlGame())return;if(!confirm('リタイアして結果画面へ進みますか？'))return;if(!canControlGame())return;finish(false,'リタイア')};
-    wrap.addEventListener('pointerdown',e=>{if(!canControlGame())return;game.input.active=true;game.input.lastX=e.clientX;game.dragDX=0;game.lastDragStep=0;try{wrap.setPointerCapture(e.pointerId)}catch(_){}vibrate(5)});
-    wrap.addEventListener('pointermove',e=>{if(!game.input.active||!canControlGame())return;const dx=e.clientX-game.input.lastX;game.input.lastX=e.clientX;game.angle+=dx*SENS;game.dragDX+=dx;}); // 指の移動ピクセル×固定係数を直接反映（dt割り算なし＝端末安定）
+    wrap.addEventListener('pointerdown',e=>{if(!canControlGame())return;game.input.active=true;game.input.lastX=e.clientX;game.dragStep=0;game.lastDragStep=0;try{wrap.setPointerCapture(e.pointerId)}catch(_){}vibrate(5)});
+    wrap.addEventListener('pointermove',e=>{if(!game.input.active||!canControlGame())return;const dx=e.clientX-game.input.lastX;game.input.lastX=e.clientX;
+      // 速度ゲイン: 1イベントの移動量が大きい（=速い）ほど回転を増幅。dt割り算は使わず端末安定、1イベントはSTEP_CAPで上限。
+      const gain=1+Math.min(SWIPE_GAIN_MAX,Math.abs(dx)*SWIPE_GAIN_K);
+      let step=dx*SENS*gain; if(step>STEP_CAP)step=STEP_CAP; else if(step<-STEP_CAP)step=-STEP_CAP;
+      game.angle+=step;game.dragStep+=step;});
     ['pointerup','pointercancel'].forEach(type=>wrap.addEventListener(type,()=>{game.input.active=false}));
     window.addEventListener('resize',resize);
     window.addEventListener('orientationchange',()=>setTimeout(resize,150));
     if(window.visualViewport)window.visualViewport.addEventListener('resize',resize);
     document.addEventListener('gesturestart',e=>e.preventDefault());
+    document.addEventListener('touchmove',e=>{if(state===STATE.PLAYING)e.preventDefault()},{passive:false}); // プレイ中はページのスクロール/ラバーバンド/端スワイプ(誤バック)を抑止
     if('ResizeObserver'in window){ro=new ResizeObserver(()=>resize());ro.observe(wrap)}
   }
 
