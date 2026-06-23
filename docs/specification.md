@@ -193,41 +193,42 @@
 
 ## v1.1 操作感・接触感・立体感 改善
 
-ゲーム内容（スコア式・ランキング・画面遷移・30階クリア・ファイアボール・単一HTML・外部依存ゼロ）は変えず、操作感と表現のみ改善した。
+ゲーム内容（スコア式・ランキング・画面遷移・30階クリア・ファイアボール・単一HTML・外部依存ゼロ）は変えず、操作感と表現のみ改善した。本v1.1は Codex 実装（PR #10）と本実装を統合したもの。慣性・通過/失敗演出は Codex 実装を採用し、通過判定（依頼書準拠の球幅）と疑似3D奥行き（Phase 5）を本実装で上乗せしている。
 
-### Phase 1: 回転操作に「重さ」（慣性）
-- 追加定数: `ROT_ACCEL=0.018` / `ROT_FRICTION=0.86` / `ROT_MAX_V=0.22` / `ROT_DIRECT_BLEND=0.35`。
-- 追加状態: `game.angularVelocity` / `game.lastPointerDx`。
-- 変更関数: `pointermove`（指の移動量から角速度を生成・クランプし、操作中は `SENS*ROT_DIRECT_BLEND` の直接回転も少し反映）、`stepAnims(dt)`（角速度で回転し摩擦で減速。`dt*60` 正規化で60/120fpsの操作感差を抑制）。
-- 挙動: 指方向へ自然に回り、離すと少し慣性で回って止まる（約0.6秒で停止）。`pendingFinish` 中は回さない。
-- 変更しない: `SENS`、判定、当たり計算。
+### Phase 1: 回転操作に「重さ」（慣性）— Codex実装を採用
+- 追加定数: `MAX_ANG_V=8.5`（最大角速度・rad/秒）/ `ANG_DRAG=15`（減衰係数）。
+- 追加状態: `game.angularVelocity`（rad/秒）、`game.input.lastT`。
+- 変更関数: `pointermove`（指の移動量と経過時間から目標角速度 `clamp(dx*SENS/dt, ±MAX_ANG_V)` を求め、`av=av*0.45+target*0.55` で追従）、`pointerdown`（掴んだ瞬間 `av*=0.35` で減衰）、`stepAnims(dt)`（`angle+=av*dt`、`av*=max(0,1-ANG_DRAG*dt)` で減速、`|av|<0.01` で停止）。秒基準のため fps 差に強い。
+- 挙動: 指の速度に追従して回り、離すと慣性で少し回って止まる。
+- 変更しない: `SENS`、スコア計算。
 
-### Phase 2: 接触判定に「球の幅」を反映
-- 追加関数: `classifyContact(p)` → `{result:'pass'|'bounce'|'danger', centerIndex, leftIndex, rightIndex, reason}`。`wedgeIndexAt()` は残す。
-- 判定: 球の角度半幅 `clamp(RBALL/R,0.18,0.42)` で正面の中心・左端・右端のくさびを見る。3点すべて穴=pass、いずれかが危険=danger、中心が穴でも端が床=bounce。
-- 接続関数: `stepPhysics()` の接触部を `classifyContact(p)` 経由に変更。ファイアボール中は従来どおり破壊（`smash`）優先。`bounce(p,contact)` / `die(p,contact)` は引数追加（旧呼び出し互換）。
-- `?debug` 時のみ `centerIndex/leftIndex/rightIndex/result/reason` と角速度・ファイア残時間を画面下部に表示（通常プレイは非表示）。
+### Phase 2: 接触判定に「球の幅」を反映（通過判定は依頼書準拠に調整）
+- 追加関数: `collisionAt(p)` → `{front,span,center,left,right,type,result,wi}`。`wedgeIndexAt(a)` は角度引数対応で残す。
+- 角度半幅: `span = min(WS*0.44, asin(min(0.95, RBALL/R))*1.15)`。正面の中心・左端・右端のくさびを見る。
+- 判定（依頼書準拠）: **中心・左端・右端すべてが穴なら pass**、いずれかが危険帯なら danger、中心が穴でも端が床なら edge（=跳ね）、それ以外は bounce。ファイアボール中は pass 以外を破壊（`smash`）。
+- 接続関数: `stepPhysics()` を `collisionAt(p)` 経由に変更。
+- `?debug` 時のみ `result/center/left/right/wi` と角度・span を画面下部に表示（`game.debugHit`・`drawHints`）。通常プレイは非表示。
 - 挙動: 穴の中央のみ安定通過、端は跳ね、危険帯に少しでも触れたら失敗。見た目と判定のズレを低減。
 
-### Phase 3: 床通過の瞬間の演出
-- 追加状態: `game.passAnim` / `game.passAnimMax=0.16` / `game.passY`。
-- 変更関数: `passFloor()`（通過時に `passAnim` 起動・小粒子最大8個）、`stepAnims()`（`passAnim` 減衰＋通過中はカメラ追従を `dt*18` に加速）、`drawBall()`（通過中は縦に伸びる）、`drawPlatform()`（通過直後の床のみ穴の縁を一瞬発光）。
+### Phase 3: 床通過の瞬間の演出 — Codex実装を採用
+- 追加状態: `game.passFX = {x,y,life,max,zone,gStart,gW,angle}`。
+- 変更関数: `passFloor()`（通過時に `passFX` 起動・`squash=-1` で縦伸び・小粒子）、`stepAnims()`（`passFX.life` 減衰・通過中はカメラ追従を `dt*20` に加速・負の `squash` を戻す）、新規 `drawPassFX()`（穴の縁を発光）、`drawBall()`（`squash<0` で縦に伸びる）。
 - 変更しない: スコア・階層進行・クリア判定。
 
-### Phase 4: 危険床の失敗演出強化
-- 追加状態: `game.dangerHit = {x,y,life,max,index}`。
-- 変更関数: `die(p,contact)`（接触した危険くさびの画面位置を算出して保存、`pendingFinish` を約0.4秒に統一、角速度停止）、`stepAnims()`（`dangerHit.life` 減衰）、新規 `drawDangerHit()`（接触位置に赤い円・バツ印）、`drawHints()`（理由テキストは接触位置基準で表示）。
+### Phase 4: 危険床の失敗演出強化 — Codex実装を採用
+- 追加状態: `game.failHit`（`collisionAt` の結果）。
+- 変更関数: `die()`（接触した危険くさび `failHit.wi` を保存、`squash=1.15`）、`drawPlatform()`（`pendingFinish` 中は接触した危険くさびを赤くハイライト＋縁取り）。
 - 変更しない: 結果理由「危険床接触」、ランキング送信1回。
 
-### Phase 5: 疑似3Dの奥行き強化（Canvas 2Dのまま）
-- 変更関数: `drawPlatform()`。各くさびの画面前後 `sin((i+0.5)*WS+phi)` で手前を明るく・奥を暗くする薄いオーバーレイを1枚追加。外周の影は既存の側面押し出し（暗色）で表現。
+### Phase 5: 疑似3Dの奥行き強化（Canvas 2Dのまま）— 本実装
+- 変更関数: `drawPlatform()`。各くさびの画面前後 `sin((i+0.5)*WS+phi)` で手前を明るく（白を最大10%）・奥を暗く（黒を最大12%）する薄いオーバーレイを1枚追加。外周の影は既存の側面押し出し（暗色）で表現。
 - 変更しない: ゾーン配色設計、危険帯と安全床のコントラスト。
 
 ### 検収（iPhone SE 320/375・iOS UA・実ブラウザ自動プレイ）
-- 慣性: ドラッグで角速度生成→離すとコースト→停止。
-- 球幅判定: 穴の中央=通過 / 穴の端=跳ね返り / 危険帯接触=失敗。
-- 通過演出: `passAnim` 起動、縁の発光。
-- 危険演出: 接触位置に赤マーカー、理由「危険床接触」。
+- 慣性: ドラッグで角速度生成（約2.5 rad/秒）→離すとコースト→停止。
+- 球幅判定: 穴の中央=通過（result=pass）/ 穴の端=跳ね返り（result=edge, 同階に留まる）/ 危険帯接触=失敗。
+- 通過演出: `passFX` 起動、縁の発光。
+- 危険演出: 接触した危険くさびを赤くハイライト、理由「危険床接触」。
 - 立体感: 手前/奥の明暗差。危険帯の視認性維持。
 - 回帰なし: 30階クリア・ファイア中の危険帯貫通・本番でデバッグ非公開・JSエラー0・送信1/取得1。
 
