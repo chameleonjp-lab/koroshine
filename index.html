@@ -131,10 +131,10 @@
     const center=wedgeIndexAt(front),left=wedgeIndexAt(front-span),right=wedgeIndexAt(front+span);
     const ct=p.wedges[center],lt=p.wedges[left],rt=p.wedges[right];
     let result='bounce',wi=center,type=ct;
-    if(ct==='gap')result='pass';
-    else if(ct==='danger')result='danger';
-    else if(lt==='danger'||rt==='danger'){result='danger';wi=lt==='danger'?left:right;type='danger'}
-    else if(lt==='gap'||rt==='gap'){result='edge';wi=lt==='gap'?left:right;type='safe'}
+    // 依頼書準拠: 中心＋左右端すべてが穴なら通過。危険帯に少しでも触れたら失敗。中心が穴でも端が床なら跳ね。
+    if(ct==='danger'||lt==='danger'||rt==='danger'){result='danger';wi=ct==='danger'?center:(lt==='danger'?left:right);type='danger'}
+    else if(ct==='gap'&&lt==='gap'&&rt==='gap')result='pass';
+    else if(ct==='gap'){result='edge';wi=lt!=='gap'?left:right;type='safe'}
     const hit={front,span,center,left,right,type,result,wi};
     if(DEBUG_MODE)game.debugHit=hit;
     return hit;
@@ -263,11 +263,14 @@
     const isTarget=(p.n===game.floor),frontWi=wedgeIndexAt();
     // 側面（厚み）：暗色を先に
     for(let i=0;i<SEG;i++){const t=p.wedges[i];if(t==='gap')continue;sectorPath(cx,ecy,R,r0,i*WS+phi,(i+1)*WS+phi,THICK);ctx.fillStyle=t==='danger'?pal.dside:pal.side;ctx.fill()}
-    // 上面
+    // 上面（手前=明るく / 奥=暗く：疑似3Dの奥行き Phase5）
     for(let i=0;i<SEG;i++){
       const t=p.wedges[i];if(t==='gap')continue;
       sectorPath(cx,ecy,R,r0,i*WS+phi,(i+1)*WS+phi,0);
       ctx.fillStyle=t==='danger'?pal.dgrTop:pal.safeTop;ctx.fill();     // 艶込みの上面色を1回で塗る
+      const fn=Math.sin((i+0.5)*WS+phi);                               // +1=手前 / -1=奥
+      if(fn>0.02){ctx.globalAlpha=fn*0.10;ctx.fillStyle='#ffffff';ctx.fill();ctx.globalAlpha=1}
+      else if(fn<-0.02){ctx.globalAlpha=-fn*0.12;ctx.fillStyle='#000000';ctx.fill();ctx.globalAlpha=1}
       if(isTarget&&i===frontWi){ctx.fillStyle='rgba(255,255,255,.28)';ctx.fill()} // 接触くさびを強調
       if(game.pendingFinish&&game.failHit&&i===game.failHit.wi){ctx.fillStyle='rgba(255,0,50,.45)';ctx.fill();ctx.lineWidth=4;ctx.strokeStyle='rgba(255,20,80,.95)';ctx.stroke()}
     }
