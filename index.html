@@ -19,10 +19,10 @@
 <body>
 <div class="app" id="app">
   <section class="screen active" id="home"><div class="card"><h1>コロシャイン</h1><p class="lead">重力で落ちて跳ねる太陽を、<br>塔を回してすき間へ通し続けろ。</p><div class="buttons"><button id="startBtn">ゲーム開始</button><button class="secondary" id="ruleBtn">ルール説明</button><button class="secondary" data-share="game">ゲームをシェア</button><a class="button secondary" href="https://chameleonjp.codeberg.page/chameleonjp_lab/" target="_blank" rel="noopener">その他のゲーム</a></div></div></section>
-  <section class="screen" id="rule"><div class="card"><h2>ルール</h2><div class="rules"><p>太陽は重力で落下し、床に当たると跳ね返ります。左右ドラッグで塔を回し、床のすき間（穴）を正面に合わせて下へ通してください。</p><ul><li>1階通過: +100</li><li>🌰取得: +50（🌰→☀️）</li><li>跳ねずに連続落下でコンボ加点</li><li><b>3連続落下でファイアボール化🔥</b>：床も<b>赤い危険帯</b>もぶち破って一気に落下（+300）</li><li>30階到達: +3000 でクリア</li><li>通常時に<b>赤い危険帯</b>へ乗ると終了</li></ul></div><div class="buttons"><button id="ruleStartBtn">名前入力へ</button><button class="secondary" data-goto="HOME">ホームへ</button></div></div></section>
+  <section class="screen" id="rule"><div class="card"><h2>ルール</h2><div class="rules"><p>太陽は重力で落下し、床に当たると跳ね返ります。左右ドラッグで塔を回し、床のすき間（穴）を正面に合わせて下へ通してください。</p><ul><li>1階通過: +100</li><li>🌰取得: +50（🌰→☀️）</li><li>跳ねずに連続落下でコンボ加点</li><li><b>3連続落下でファイアボール化🔥</b>：床も<b>赤い危険帯</b>もぶち破って一気に落下（+300）</li><li>40階到達: +3000 でクリア</li><li>通常時に<b>赤い危険帯</b>へ乗ると終了</li></ul></div><div class="buttons"><button id="ruleStartBtn">名前入力へ</button><button class="secondary" data-goto="HOME">ホームへ</button></div></div></section>
   <section class="screen" id="name"><div class="card"><h2>名前入力</h2><p>ランキング用の名前を10文字程度で入力してください。</p><input id="playerName" maxlength="10" autocomplete="nickname" placeholder="なまえ"><div class="buttons"><button id="readyBtn">準備OK</button><button class="secondary" data-goto="HOME">戻る</button></div></div></section>
   <section class="screen" id="ready"><div class="card"><h2>READY</h2><p class="lead">左右ドラッグで塔を回転！<br>正面のすき間に太陽を通し、3連続でファイアボール🔥を狙え。</p><div class="buttons"><button id="playBtn">スタート</button><button class="secondary" data-goto="NAME">名前を変える</button></div></div></section>
-  <section class="game" id="game"><div class="hud"><div><span>スコア</span><strong id="scoreText">0</strong></div><div><span>現在階層</span><strong id="floorText">1 / 30</strong></div><button class="danger" id="retireBtn">リタイア</button></div><div class="canvas-wrap" id="canvasWrap"><canvas id="gameCanvas" aria-label="コロシャインのゲーム画面"></canvas></div><div class="hint">左右ドラッグで塔を回転。正面のすき間に通そう。3連続でファイアボール🔥、赤い帯は危険！</div></section>
+  <section class="game" id="game"><div class="hud"><div><span>スコア</span><strong id="scoreText">0</strong></div><div><span>現在階層</span><strong id="floorText">1 / 40</strong></div><button class="danger" id="retireBtn">リタイア</button></div><div class="canvas-wrap" id="canvasWrap"><canvas id="gameCanvas" aria-label="コロシャインのゲーム画面"></canvas></div><div class="hint">左右ドラッグで塔を回転。正面のすき間に通そう。3連続でファイアボール🔥、赤い帯は危険！</div></section>
   <section class="screen" id="result"><div class="card"><h2 id="resultTitle">結果</h2><div class="result-grid"><div class="stat">終了理由<br><strong id="resultReason">-</strong></div><div class="stat">到達階<br><strong id="resultFloor">1</strong></div><div class="stat">スコア<br><strong id="resultScore">0</strong></div></div><div class="notice" id="resultComment">まずは10階を目指しましょう</div><div class="notice" id="rankingStatus" role="status" aria-live="polite">ランキング送信準備中...</div><h3>ランキング</h3><ol class="ranking" id="rankingList"></ol><div class="buttons"><button id="retryBtn">もう一度遊ぶ</button><button class="secondary" data-share="result">結果をシェア</button><a class="button secondary" href="https://chameleonjp.codeberg.page/chameleonjp_lab/" target="_blank" rel="noopener">その他のゲーム</a><button class="secondary" data-goto="HOME">ホームへ</button></div></div></section>
   <section class="screen" id="error"><div class="card"><h2>ERROR</h2><p id="errorMessage">エラーが発生しました。</p><button data-goto="HOME">ホームへ</button></div></section>
 </div>
@@ -36,7 +36,7 @@
   const screens={HOME:$('home'),RULE:$('rule'),NAME:$('name'),READY:$('ready'),RESULT:$('result'),ERROR:$('error')};
   const gameEl=$('game'), canvas=$('gameCanvas'), wrap=$('canvasWrap'), ctx=canvas.getContext('2d');
   const scoreText=$('scoreText'), floorText=$('floorText'), playerNameInput=$('playerName');
-  const TAU=Math.PI*2, MAX_FLOOR=30, VISIBLE=7, SEG=8, WS=TAU/SEG;
+  const TAU=Math.PI*2, MAX_FLOOR=40, VISIBLE=7, SEG=8, WS=TAU/SEG;
   // --- 物理 / 描画パラメータ（CSSピクセル・秒） ---
   const PERSP=0.36, GRAV=2600, MAXV=1700, FIREV=1350, FLOORGAP=128, BOUNCEV=720, SENS=0.0125, MAX_STEP=0.22, THICK=14, FIXED=1/120, FIRE_FLOORS=6;
   const SWIPE_GAIN_K=0.03, SWIPE_GAIN_MAX=2.2, STEP_CAP=1.2;   // スワイプ速度ゲイン（速いほど大きく回す。1イベントはSTEP_CAPで上限）
@@ -104,10 +104,10 @@
       let gStart;
       if(n===1)gStart=prevGap;
       else if(n<=10)gStart=mod(prevGap+(Math.floor(rng(seed+n*1.7)*3)-1),SEG);
-      else{const mag=(rng(seed+n*2.3)<0.5?2:3),dir=(rng(seed+n*4.7)<0.5?1:-1);gStart=mod(prevGap+mag*dir,SEG);} // 中盤は2〜3ブロックの中程度ズレ（素早い回転で届く範囲。真裏で詰ませない）
+      else gStart=mod(prevGap+(SEG>>1)+(Math.floor(rng(seed+n*2.3)*3)-1),SEG); // 中盤以降は真裏付近へ大きくズラす（速度ゲインで素早く回して通す）
       for(let k=0;k<gW;k++)w[mod(gStart+k,SEG)]='gap';
       // 危険帯数（深いほど増加）
-      let dCount=0; if(n>=4)dCount=1; if(n>=12)dCount=2; if(n>=22)dCount=3; // 危険帯は最大3（一面赤で詰まないよう安全な着地余地を確保）
+      let dCount=0; if(n>=4)dCount=1; if(n>=10)dCount=2; if(n>=18)dCount=3; if(n>=26)dCount=4; // 危険帯数（深いほど増加・元のマップ）
       // ルール2 確定配置: まず穴のすぐ隣（ミスしやすい箇所）を危険に、残りはシードで散らす
       const tryD=wi=>{if(w[wi]==='safe'){w[wi]='danger';return true}return false};
       let placed=0;
@@ -176,7 +176,7 @@
     spawn(cx,sy,14,'#fff3bf',145,390,3);spawn(cx,sy+8,8,'rgba(80,45,0,.55)',80,260,4);
     vibrate(12);
     game.floor++;
-    if(game.floor>=MAX_FLOOR){addScore(3000,'30階 +3000',cx,sy-70);finish(true,'30階到達')}
+    if(game.floor>=MAX_FLOOR){addScore(3000,'40階 +3000',cx,sy-70);finish(true,'40階到達')}
   }
   function smash(p,wi){
     const cx=view.W/2,sy=p.y-game.cameraY,pal=PAL[p.zone];
@@ -367,7 +367,7 @@
 
   // ---------- 結果 ----------
   function updateHud(){scoreText.textContent=game.score;floorText.textContent=Math.min(game.floor,MAX_FLOOR)+' / '+MAX_FLOOR}
-  function resultComment(won,reason){if(reason==='リタイア')return 'リタイアしました。次はもう少し深く進めます';if(reason==='危険床接触')return '危険帯で終了。3連続落下でファイアボール化すれば突破できます';if(won||game.floor>=MAX_FLOOR)return '完全クリア！';if(game.floor>=20)return 'かなり深くまで進みました';if(game.floor>=10)return '次は20階を狙えます';return 'まずは10階を目指しましょう'}
+  function resultComment(won,reason){if(reason==='リタイア')return 'リタイアしました。次はもう少し深く進めます';if(reason==='危険床接触')return '危険帯で終了。3連続落下でファイアボール化すれば突破できます';if(won||game.floor>=MAX_FLOOR)return '完全クリア！';if(game.floor>=30)return 'かなり深くまで進みました';if(game.floor>=20)return '次は30階を狙えます';if(game.floor>=10)return '次は20階を狙えます';return 'まずは10階を目指しましょう'}
   function finish(won,reason){
     if(gameOverHandled)return;gameOverHandled=true;
     game.pendingFinish=null;game.fire=0;game.won=won;game.finalReason=reason;state=STATE.RESULT;
