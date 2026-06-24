@@ -367,16 +367,28 @@
 
   // ---------- 結果 ----------
   function updateHud(){scoreText.textContent=game.score;floorText.textContent=Math.min(game.floor,MAX_FLOOR)+' / '+MAX_FLOOR}
-  function resultComment(won,reason){if(reason==='リタイア')return 'リタイアしました。次はもう少し深く進めます';if(reason==='危険床接触')return '危険帯で終了。3連続落下でファイアボール化すれば突破できます';if(won||game.floor>=MAX_FLOOR)return '完全クリア！';if(game.floor>=30)return 'かなり深くまで進みました';if(game.floor>=20)return '次は30階を狙えます';if(game.floor>=10)return '次は20階を狙えます';return 'まずは10階を目指しましょう'}
+  function resultComment(won,reason,reachedFloor){
+    const floor=Math.max(1,Number(reachedFloor)||1);
+    if(won&&floor>=40)return 'ちゅっちゅ〜😘';
+    if(floor>=36)return 'あ゛ぁあ゛ぁぁぁあ゛ぁぁあ゛ぁ！！！！';
+    if(floor>=31)return 'あのぉ…確認なんですけど、30層までって話…どこいったんですかね？';
+    if(floor>=26)return 'どうしてだよぉぉぉお！！！';
+    if(floor>=21)return 'いやぁ、なんも言えねぇってのが本音です';
+    if(floor>=16)return '俺はここまで来れるだけでも凄いって思いますけど';
+    if(floor>=11)return 'そんな日もありますよ…っと。';
+    if(floor>=6)return 'あぁ、こういう時ってあんまり気にしないほうが良かったりするんですよ';
+    return 'いやぁ…なんていうか…お疲れ様です';
+  }
   function finish(won,reason){
     if(gameOverHandled)return;gameOverHandled=true;
     game.pendingFinish=null;game.fire=0;game.won=won;game.finalReason=reason;state=STATE.RESULT;
     wrap.classList.toggle('clear',won);
     $('resultTitle').textContent=won?'クリア！':'結果';
     $('resultReason').textContent=reason||(won?'クリア':'終了');
-    $('resultFloor').textContent=Math.min(game.floor,MAX_FLOOR);
+    const reachedFloor=Math.min(game.floor,MAX_FLOOR);
+    $('resultFloor').textContent=reachedFloor;
     $('resultScore').textContent=game.score;
-    $('resultComment').textContent=resultComment(won,reason);
+    $('resultComment').textContent=resultComment(won,reason,reachedFloor);
     setState(STATE.RESULT);renderRankingShell();submitAndFetchRankingOnce();
   }
 
