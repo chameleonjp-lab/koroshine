@@ -367,9 +367,9 @@
 
   // ---------- 結果 ----------
   function updateHud(){scoreText.textContent=game.score;floorText.textContent=Math.min(game.floor,MAX_FLOOR)+' / '+MAX_FLOOR}
-  function resultComment(won,reason,reachedFloor){
-    const floor=Math.max(1,Number(reachedFloor)||1);
-    if(won&&floor>=40)return 'ちゅっちゅ〜😘';
+  function resultComment(reachedFloor){
+    const floor=Math.max(1,Math.floor(Number(reachedFloor)||1));
+    if(floor>=40)return 'ちゅっちゅ〜😘';
     if(floor>=36)return 'あ゛ぁあ゛ぁぁぁあ゛ぁぁあ゛ぁ！！！！';
     if(floor>=31)return 'あのぉ…確認なんですけど、30層までって話…どこいったんですかね？';
     if(floor>=26)return 'どうしてだよぉぉぉお！！！';
@@ -388,7 +388,7 @@
     const reachedFloor=Math.min(game.floor,MAX_FLOOR);
     $('resultFloor').textContent=reachedFloor;
     $('resultScore').textContent=game.score;
-    $('resultComment').textContent=resultComment(won,reason,reachedFloor);
+    $('resultComment').textContent=resultComment(reachedFloor);
     setState(STATE.RESULT);renderRankingShell();submitAndFetchRankingOnce();
   }
 
