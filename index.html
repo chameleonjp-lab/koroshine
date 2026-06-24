@@ -394,7 +394,20 @@
 
   // ---------- 名前・シェア ----------
   function startReady(){const name=playerNameInput.value.trim().slice(0,10);if(!name){playerNameInput.focus();return}try{localStorage.setItem('koroshine:name',name)}catch(e){}game.playerName=name;setState(STATE.READY)}
-  function share(kind){const text=kind==='result'?('コロシャインで'+game.score+'点、'+Math.min(game.floor,MAX_FLOOR)+'階まで到達！'):'コロシャイン - 重力で落ちて跳ねる太陽を、塔を回して穴へ通せ。';const url=PUBLIC_URL,full=text+' '+url;if(navigator.share){navigator.share({title:'コロシャイン',text,url}).catch(()=>{});return}if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(full).then(()=>alert('シェア文をコピーしました')).catch(()=>prompt('コピーしてシェアしてください',full));return}prompt('コピーしてシェアしてください',full)}
+  function share(kind){
+    const floor=Math.min(game.floor,MAX_FLOOR);
+    const text=kind==='result'
+      ? `コロシャイン
+スコア: ${game.score}点
+到達階: ${floor}階
+${PUBLIC_URL}`
+      : `コロシャイン
+重力で落ちて跳ねる太陽を、塔を回して穴へ通せ。
+${PUBLIC_URL}`;
+    if(navigator.share){navigator.share({title:'コロシャイン',text}).catch(()=>{});return}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(()=>alert('シェア文をコピーしました')).catch(()=>prompt('コピーしてシェアしてください',text));return}
+    prompt('コピーしてシェアしてください',text)
+  }
 
   // ---------- ランキング ----------
   async function callRpc(name,payload){const res=await fetch(RANKING_CONFIG.supabaseUrl+'/rest/v1/rpc/'+name,{method:'POST',headers:{'Content-Type':'application/json','apikey':RANKING_CONFIG.publishableKey,'Authorization':'Bearer '+RANKING_CONFIG.publishableKey},body:JSON.stringify(payload)});if(!res.ok){const msg=await res.text().catch(()=>'');throw new Error((name+' failed: '+res.status+' '+msg).trim())}return res.status===204?null:res.json()}
