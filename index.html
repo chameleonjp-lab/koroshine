@@ -53,7 +53,7 @@
   let rankingSent=false,rankingFetched=false,gameOverHandled=false;
   const view={W:1,H:1,R:140,r0:34,RBALL:19};
   const game={
-    score:0,floor:1,angle:0,by:0,bvy:0,cameraY:0,fire:0,
+    score:0,floor:1,angle:0,by:0,bvy:0,cameraY:0,fire:0,postFireGrace:0,
     platforms:[],effects:[],particles:[],splats:[],trail:[],
     combo:0,dropBurst:0,lastDropAt:-10,squash:0,shake:0,inGameTime:0,seed:1,dragStep:0,lastDragStep:0,
     pendingFinish:null,finalReason:'',playerName:'',won:false,startedAt:0,
@@ -124,7 +124,7 @@
   }
   function reset(){
     rankingSent=rankingFetched=gameOverHandled=false;
-    game.score=0;game.floor=1;game.angle=0;game.fire=0;
+    game.score=0;game.floor=1;game.angle=0;game.fire=0;game.postFireGrace=0;
     game.seed=Math.random()*997+1;game.inGameTime=0;                 // プレイごとに異なるステージ＋ゲーム内時間をリセット
     game.platforms=makeStage(game.seed);
     game.by=-FLOORGAP*0.8;game.bvy=0;
@@ -161,6 +161,7 @@
   function igniteFire(cx,sy){game.fire=FIRE_FLOORS;effect('🔥 ファイアボール!',cx,sy-70,'item');game.shake=Math.max(game.shake,0.7);vibrate(22)} // 残り破壊階数(=6)
   function passFloor(p,smashed){
     const now=game.inGameTime,cx=view.W/2,sy=p.y-game.cameraY,wasFiring=game.fire>0;
+    let fireExpiredNow=false;
     const quick=(now-game.lastDropAt<0.85)||wasFiring;
     game.combo=quick?game.combo+1:1;
     game.dropBurst=quick?game.dropBurst+1:1;
@@ -170,12 +171,13 @@
     else if(game.combo>=2)addScore((game.combo-1)*50,game.combo+'連 +'+((game.combo-1)*50),cx,sy-24);
     if(game.dropBurst>=3&&!wasFiring){addScore(300,'一気落下 +300',cx,sy-46);game.dropBurst=0;igniteFire(cx,sy)}
     if(p.item&&!p.collected){p.collected=true;addScore(50,'+50',cx,sy-12);effect('☀️',cx,sy,'item');spawn(cx,sy,12,'#ffd84d',150,260,4);vibrate(12)}
-    if(wasFiring){game.fire--;if(game.fire<=0){game.fire=0;game.combo=0;game.dropBurst=0}} // 6階突破したらファイア終了（連鎖再点火を防ぐ）
+    if(wasFiring){game.fire--;if(game.fire<=0){game.fire=0;game.combo=0;game.dropBurst=0;fireExpiredNow=true}} // 6階突破したらファイア終了（連鎖再点火を防ぐ）
     game.passFX={x:cx,y:sy,life:0.16,max:0.16,zone:p.zone,gStart:p.gStart,gW:p.gW,angle:game.angle};
     game.squash=-1;game.shake=Math.max(game.shake,0.18);
     spawn(cx,sy,14,'#fff3bf',145,390,3);spawn(cx,sy+8,8,'rgba(80,45,0,.55)',80,260,4);
     vibrate(12);
     game.floor++;
+    if(fireExpiredNow&&game.floor<MAX_FLOOR){game.postFireGrace=1;effect('着地猶予',cx,sy-60,'item')}
     if(game.floor>=MAX_FLOOR){addScore(3000,'40階 +3000',cx,sy-70);finish(true,'40階到達')}
   }
   function smash(p,wi){
@@ -192,6 +194,15 @@
     game.combo=0;game.dropBurst=0;game.squash=1;
     splat(cx,sy,pal.safe);spawn(cx,sy,6,pal.safe,120,440,3);
     vibrate(8);
+  }
+  function graceBounce(p,hit){
+    const cx=view.W/2,sy=p.y-game.cameraY,pal=PAL[p.zone];
+    game.by=p.y-view.RBALL;game.bvy=-BOUNCEV;
+    game.combo=0;game.dropBurst=0;game.squash=1;
+    game.shake=Math.max(game.shake,0.25);
+    effect('着地猶予',cx,sy-24,'item');
+    spawn(cx,sy,10,pal.safe,130,360,3);
+    vibrate(10);
   }
   function die(p){
     const cx=view.W/2,sy=p.y-game.cameraY,pal=PAL[p.zone];
@@ -215,8 +226,11 @@
     if(!p){finish(true,'CLEAR');return}
     if(game.by+view.RBALL>=p.y&&(game.bvy>0||game.fire>0)){
       const hit=collisionAt(p);
+      const usePostFireGrace=game.fire<=0&&game.postFireGrace>0;
+      if(usePostFireGrace)game.postFireGrace=0;
       if(hit.result==='pass')passFloor(p,false);
       else if(game.fire>0)smash(p,hit.wi);
+      else if(usePostFireGrace&&hit.result==='danger')graceBounce(p,hit);
       else if(hit.result==='danger')die(p);
       else bounce(p);
     }
