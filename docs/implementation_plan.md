@@ -9,7 +9,7 @@
 - Supabaseランキング設定を本番値へ更新する。
 - `submit_score` / `get_best_score_ranking` を使うランキング送信・取得処理にする。
 - 送信失敗時にローカルランキングへ逃がさず、本番ランキング失敗として表示する。
-- その他のゲームURLを `https://chameleonjp.codeberg.page/chameleonjp_lab/` にする。
+- その他のゲームURLを `https://chameleonjp-lab.github.io/chameleonjp_lab/` にする。
 - 30階到達仕様を文書に明記する。
 - 3階以上一気落下ボーナスを850ms以内の3連続穴通過に合わせる。
 - 🌰取得時の `+50` と `☀️` 表示を見やすくする。

@@ -10,7 +10,7 @@
 - 説明: くるくる回して落ち続けろ。🌰を集めて高得点を狙え。
 - 対象: スマホ向けブラウザ、iPhone中心、iPhone SE対応
 - 構成: `index.html` 単体公開可能
-- その他のゲーム: https://chameleonjp.codeberg.page/chameleonjp_lab/
+- その他のゲーム: https://chameleonjp-lab.github.io/chameleonjp_lab/
 
 ## 遊び方
 
