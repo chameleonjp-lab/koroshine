@@ -104,8 +104,8 @@
 - 確認済み: Web Share API使用時もURLが本文に含まれる。
 - 確認済み: クリップボードフォールバック時もURLが本文に含まれる。
 - 確認済み: Web Share API未対応時のフォールバックがある。
-- 確認済み: ホームのその他のゲームURLは `https://chameleonjp.codeberg.page/chameleonjp_lab/` である。
-- 確認済み: 結果画面のその他のゲームURLは `https://chameleonjp.codeberg.page/chameleonjp_lab/` である。
+- 確認済み: ホームのその他のゲームURLは `https://chameleonjp-lab.github.io/chameleonjp_lab/` である。
+- 確認済み: 結果画面のその他のゲームURLは `https://chameleonjp-lab.github.io/chameleonjp_lab/` である。
 
 
 ## 今回追加したユーザープレイ体験改善の重点確認
