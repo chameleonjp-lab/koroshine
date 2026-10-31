@@ -95,3 +95,5 @@ X共有の修正理由: コピーのみ/OS共有の挙動を投稿確認画面�
 最終レビュー修正: 順位APIは配列/rank_no正整数/display_name文字列/best_score整数を検証し、不正応答を「空」や推定順位に置換しない。通信失敗/再試行表示へ進む。多言語対応ではzh-Hans/zh-Hantの明示scriptを地域より優先する。
 
 `node tools/ranking-contract.test.mjs` の2件でHTTP200不正応答の拒否、同点順位・順序・整数点数の維持を追加確認。
+
+送信ACKの追加レビュー修正: accepted=false の明示拒否と、null/空配列/accepted欠損等の不正ACKを分離する。不正ACKは失敗/送信待ちとして同じUUIDで再試行でき、記録を消さない。queueの追加自動テストで欠損ACK後の成功と同一UUIDを確認した。
