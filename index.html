@@ -18,12 +18,12 @@
 </head>
 <body>
 <div class="app" id="app">
-  <section class="screen active" id="home"><div class="card"><h1>コロシャイン</h1><p class="lead">重力で落ちて跳ねる太陽を、<br>塔を回してすき間へ通し続けろ。</p><div class="buttons"><button id="startBtn">ゲーム開始</button><button class="secondary" id="ruleBtn">ルール説明</button><button class="secondary common-x-share" data-share="game">Xでシェア</button><a class="common-ranking-link" href="https://chameleonjp-lab.github.io/chameleonjp_lab/ranking.html?game=koroshine">ランキング</a><a class="button secondary" href="https://chameleonjp-lab.github.io/chameleonjp_lab/" target="_blank" rel="noopener">その他のゲーム</a></div></div></section>
-  <section class="screen" id="rule"><div class="card"><h2>ルール</h2><div class="rules"><p>太陽は重力で落下し、床に当たると跳ね返ります。左右ドラッグで塔を回し、床のすき間（穴）を正面に合わせて下へ通してください。</p><ul><li>1階通過: +100</li><li>🌰取得: +50（🌰→☀️）</li><li>跳ねずに連続落下でコンボ加点</li><li><b>3連続落下でファイアボール化🔥</b>：床も<b>赤い危険帯</b>もぶち破って一気に落下（+300）</li><li>40階到達: +3000 でクリア</li><li>通常時に<b>赤い危険帯</b>へ乗ると終了</li></ul></div><div class="buttons"><button id="ruleStartBtn">名前入力へ</button><button class="secondary" data-goto="HOME">ホームへ</button></div></div></section>
-  <section class="screen" id="name"><div class="card"><h2>名前入力</h2><p>ランキング用の名前を10文字程度で入力してください。</p><input id="playerName" maxlength="10" autocomplete="nickname" placeholder="なまえ"><div class="buttons"><button id="readyBtn">準備OK</button><button class="secondary" data-goto="HOME">戻る</button></div></div></section>
-  <section class="screen" id="ready"><div class="card"><h2>READY</h2><p class="lead">左右ドラッグで塔を回転！<br>正面のすき間に太陽を通し、3連続でファイアボール🔥を狙え。</p><div class="buttons"><button id="playBtn">スタート</button><button class="secondary" data-goto="NAME">名前を変える</button></div></div></section>
+  <section class="screen active" id="home"><div class="card"><h1>コロシャイン</h1><p class="lead">重力で落ちて跳ねる太陽を、<br>塔を回してすき間へ通し続けろ。</p><label for="playerName">名前（任意・10文字まで）</label><input id="playerName" autocomplete="nickname" placeholder="なまえ" aria-describedby="namePrivacy"><p id="namePrivacy">名前を入力すると、名前と記録がランキングに公開されます。空欄でも遊べます。</p><div class="buttons"><button id="startBtn">ゲーム開始</button><button class="secondary" id="ruleBtn">ルール説明</button><button class="secondary common-x-share" data-share="game">Xでシェア</button><a class="common-ranking-link" href="https://chameleonjp-lab.github.io/chameleonjp_lab/ranking.html?game=koroshine">ランキング</a><a class="button secondary" href="https://chameleonjp-lab.github.io/chameleonjp_lab/" target="_blank" rel="noopener">その他のゲーム</a></div></div></section>
+  <section class="screen" id="rule"><div class="card"><h2>ルール</h2><div class="rules"><p>太陽は重力で落下し、床に当たると跳ね返ります。左右ドラッグで塔を回し、床のすき間（穴）を正面に合わせて下へ通してください。</p><ul><li>1階通過: +100</li><li>🌰取得: +50（🌰→☀️）</li><li>跳ねずに連続落下でコンボ加点</li><li><b>3連続落下でファイアボール化🔥</b>：床も<b>赤い危険帯</b>もぶち破って一気に落下（+300）</li><li>40階到達: +3000 でクリア</li><li>通常時に<b>赤い危険帯</b>へ乗ると終了</li></ul></div><div class="buttons"><button id="ruleStartBtn">ゲーム開始</button><button class="secondary" data-goto="HOME">ホームへ</button></div></div></section>
+  <section class="screen" id="name"><div class="card"><h2>名前入力</h2><p>ランキング用の名前を10文字程度で入力してください。</p><div class="buttons"><button id="readyBtn">準備OK</button><button class="secondary" data-goto="HOME">戻る</button></div></div></section>
+  <section class="screen" id="ready"><div class="card"><h2>READY</h2><p class="lead">左右ドラッグで塔を回転！<br>正面のすき間に太陽を通し、3連続でファイアボール🔥を狙え。</p><div class="buttons"><button id="playBtn">スタート</button><button class="secondary" data-goto="HOME">名前を変える</button></div></div></section>
   <section class="game" id="game"><div class="hud"><div><span>スコア</span><strong id="scoreText">0</strong></div><div><span>現在階層</span><strong id="floorText">1 / 40</strong></div><button class="danger" id="retireBtn">リタイア</button></div><div class="canvas-wrap" id="canvasWrap"><canvas id="gameCanvas" aria-label="コロシャインのゲーム画面"></canvas></div><div class="hint">左右ドラッグで塔を回転。正面のすき間に通そう。3連続でファイアボール🔥、赤い帯は危険！</div></section>
-  <section class="screen" id="result"><div class="card"><h2 id="resultTitle">結果</h2><div class="result-grid"><div class="stat">終了理由<br><strong id="resultReason">-</strong></div><div class="stat">到達階<br><strong id="resultFloor">1</strong></div><div class="stat">スコア<br><strong id="resultScore">0</strong></div></div><div class="notice" id="resultComment">まずは10階を目指しましょう</div><div class="notice" id="rankingStatus" role="status" aria-live="polite">ランキング送信準備中...</div><h3>ランキング</h3><ol class="ranking" id="rankingList"></ol><div class="buttons"><button id="retryBtn">もう一度遊ぶ</button><button class="secondary common-x-share" data-share="result">Xでシェア</button><a class="common-ranking-link" href="https://chameleonjp-lab.github.io/chameleonjp_lab/ranking.html?game=koroshine">ランキング</a><a class="button secondary" href="https://chameleonjp-lab.github.io/chameleonjp_lab/" target="_blank" rel="noopener">その他のゲーム</a><button class="secondary" data-goto="HOME">ホームへ</button></div></div></section>
+  <section class="screen" id="result"><div class="card"><h2 id="resultTitle">結果</h2><div class="result-grid"><div class="stat">終了理由<br><strong id="resultReason">-</strong></div><div class="stat">到達階<br><strong id="resultFloor">1</strong></div><div class="stat">スコア<br><strong id="resultScore">0</strong></div></div><div class="notice" id="resultComment">まずは10階を目指しましょう</div><div class="notice" id="rankingStatus" role="status" aria-live="polite">ランキング送信準備中...</div><h3>ランキング</h3><ol class="ranking" id="rankingList"></ol><button class="secondary" id="rankingRetryBtn">ランキングを再取得</button><div class="buttons"><button id="retryBtn">もう一度遊ぶ</button><button class="secondary common-x-share" data-share="result">Xでシェア</button><a class="common-ranking-link" href="https://chameleonjp-lab.github.io/chameleonjp_lab/ranking.html?game=koroshine">ランキング</a><a class="button secondary" href="https://chameleonjp-lab.github.io/chameleonjp_lab/" target="_blank" rel="noopener">その他のゲーム</a><button class="secondary" data-goto="HOME">ホームへ</button></div></div></section>
   <section class="screen" id="error"><div class="card"><h2>ERROR</h2><p id="errorMessage">エラーが発生しました。</p><button data-goto="HOME">ホームへ</button></div></section>
 </div>
 <style>
@@ -108,6 +108,7 @@ button.common-x-share { background:#000 !important; color:#fff !important; borde
   const zoneOf=n=>Math.min(PAL.length-1,Math.floor((n-1)/6));
   let state=STATE.HOME,last=0,dpr=1,rafId=0,acc=0,ro=null;
   let rankingSent=false,rankingFetched=false,gameOverHandled=false;
+  let rankingGeneration=0,rankingRequest=0;
   const view={W:1,H:1,R:140,r0:34,RBALL:19};
   const game={
     score:0,floor:1,angle:0,by:0,bvy:0,cameraY:0,fire:0,postFireGrace:0,
@@ -180,6 +181,7 @@ button.common-x-share { background:#000 !important; color:#fff !important; borde
     return plats;
   }
   function reset(){
+    rankingGeneration++; rankingRequest++;
     rankingSent=rankingFetched=gameOverHandled=false;
     game.score=0;game.floor=1;game.angle=0;game.fire=0;game.postFireGrace=0;
     game.seed=Math.random()*997+1;game.inGameTime=0;                 // プレイごとに異なるステージ＋ゲーム内時間をリセット
@@ -464,7 +466,7 @@ button.common-x-share { background:#000 !important; color:#fff !important; borde
   }
 
   // ---------- 名前・シェア ----------
-  function startReady(){const name=playerNameInput.value.trim().slice(0,10);if(!name){playerNameInput.focus();return}try{localStorage.setItem('koroshine:name',name)}catch(e){}game.playerName=name;setState(STATE.READY)}
+  function startReady(){const name=Array.from(playerNameInput.value.trim()).slice(0,10).join('');try{localStorage.setItem('koroshine:name',name)}catch(e){}game.playerName=name;setState(STATE.READY)}
   function share(kind){
     const floor=Math.min(game.floor,MAX_FLOOR);
     const text=kind==='result'
@@ -480,20 +482,43 @@ ${PUBLIC_URL}`;
 
   // ---------- ランキング ----------
   async function callRpc(name,payload){const res=await fetch(RANKING_CONFIG.supabaseUrl+'/rest/v1/rpc/'+name,{method:'POST',headers:{'Content-Type':'application/json','apikey':RANKING_CONFIG.publishableKey,'Authorization':'Bearer '+RANKING_CONFIG.publishableKey},body:JSON.stringify(payload)});if(!res.ok){const msg=await res.text().catch(()=>'');throw new Error((name+' failed: '+res.status+' '+msg).trim())}return res.status===204?null:res.json()}
+  async function loadResultRanking(generation=rankingGeneration){
+    const request=++rankingRequest;
+    const list=$('rankingList');
+    list.textContent='読み込み中...';
+    try {
+      const rows=await callRpc(RANKING_CONFIG.rankingRpc,{p_game_slug:RANKING_CONFIG.gameSlug,p_limit:30});
+      if(generation!==rankingGeneration || request!==rankingRequest)return;
+      rankingFetched=true;
+      renderRankingRows(Array.isArray(rows)?rows:[]);
+      if(!list.children.length)list.textContent='まだ記録がありません。';
+    } catch(e) {
+      if(generation!==rankingGeneration || request!==rankingRequest)return;
+      rankingFetched=false;
+      list.textContent='ランキングを取得できませんでした。「ランキングを再取得」で再試行できます。';
+    }
+  }
   async function submitAndFetchRankingOnce(){
-    if(rankingSent&&rankingFetched)return;
-    const status=$('rankingStatus'),list=$('rankingList');
-    if(!rankingSent){rankingSent=true;status.textContent='ランキング送信中...';
-      try{if(!RANKING_CONFIG.enabled)throw new Error('ランキング設定が未設定です。');
-        await callRpc(RANKING_CONFIG.submitRpc,{p_display_name:game.playerName||'名無し',p_game_slug:RANKING_CONFIG.gameSlug,p_score:game.score,p_client_version:RANKING_CONFIG.clientVersion});
-        status.textContent='ランキング送信に成功しました。ランキング取得中...';
-      }catch(e){console.warn('ranking submit failed',e);status.textContent='ランキング送信に失敗しました。スコアはこの画面で確認できます。';}}
-    if(!rankingFetched){rankingFetched=true;
-      try{const rows=await callRpc(RANKING_CONFIG.rankingRpc,{p_game_slug:RANKING_CONFIG.gameSlug,p_limit:30});
-        renderRankingRows(Array.isArray(rows)?rows:[]);
-        if(list.children.length)status.textContent=status.textContent.includes('失敗')?(status.textContent+' ランキングを取得しました。'):'ランキング送信に成功しました。ランキングを取得しました。';
-        else status.textContent+=' ランキングはまだありません。';
-      }catch(e){console.warn('ranking fetch failed',e);if(!status.textContent.includes('送信に失敗'))status.textContent='ランキング取得に失敗しました。時間をおいて再度お試しください。';}}
+    if(rankingSent)return;
+    rankingSent=true;
+    const generation=rankingGeneration;
+    const result=Object.freeze({name:game.playerName,score:game.score});
+    const status=$('rankingStatus');
+    if(!result.name){
+      status.textContent='名前なしでプレイしたため、この結果はランキングへ送信しません。';
+    } else {
+      status.textContent='ランキング送信中...';
+      try {
+        if(!RANKING_CONFIG.enabled)throw new Error('ranking disabled');
+        await callRpc(RANKING_CONFIG.submitRpc,{p_display_name:result.name,p_game_slug:RANKING_CONFIG.gameSlug,p_score:result.score,p_client_version:RANKING_CONFIG.clientVersion});
+        if(generation!==rankingGeneration)return;
+        status.textContent='ランキングへ送信しました。';
+      } catch(e) {
+        if(generation!==rankingGeneration)return;
+        status.textContent='ランキング送信に失敗しました。今回の結果はこの画面に保持しています。';
+      }
+    }
+    await loadResultRanking(generation);
   }
   function renderRankingShell(){$('rankingStatus').textContent='ランキング送信準備中...';$('rankingList').replaceChildren()}
   function renderRankingRows(rows){const list=$('rankingList');list.replaceChildren(...rows.slice(0,30).map((r,i)=>{const li=document.createElement('li');const rank=document.createElement('span');rank.textContent=(r.rank_no??r.rank??r.ranking??i+1)+'.';const name=document.createElement('span');name.textContent=r.display_name||r.player_name||r.name||'名無し';const score=document.createElement('span');score.textContent=Math.round(Number(r.score||r.best_score||0));li.append(rank,name,score);return li}))}
@@ -503,13 +528,14 @@ ${PUBLIC_URL}`;
   function wire(){
     document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>setState(STATE[b.dataset.goto])));
     document.querySelectorAll('[data-share]').forEach(b=>b.addEventListener('click',()=>share(b.dataset.share)));
-    $('startBtn').onclick=()=>setState(STATE.NAME);
+    $('startBtn').onclick=startReady;
     $('ruleBtn').onclick=()=>setState(STATE.RULE);
-    $('ruleStartBtn').onclick=()=>setState(STATE.NAME);
+    $('ruleStartBtn').onclick=startReady;
     $('readyBtn').onclick=startReady;
-    playerNameInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();startReady()}});
+    playerNameInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing&&e.keyCode!==229){e.preventDefault();startReady()}});
     $('playBtn').onclick=()=>setState(STATE.PLAYING);
-    $('retryBtn').onclick=()=>setState(STATE.PLAYING);
+    $('retryBtn').onclick=startReady;
+    $('rankingRetryBtn').onclick=()=>loadResultRanking();
     $('retireBtn').onclick=()=>{if(!canControlGame())return;if(!confirm('リタイアして結果画面へ進みますか？'))return;if(!canControlGame())return;finish(false,'リタイア')};
     wrap.addEventListener('pointerdown',e=>{if(!canControlGame())return;game.input.active=true;game.input.lastX=e.clientX;game.dragStep=0;game.lastDragStep=0;try{wrap.setPointerCapture(e.pointerId)}catch(_){}vibrate(5)});
     wrap.addEventListener('pointermove',e=>{if(!game.input.active||!canControlGame())return;const dx=e.clientX-game.input.lastX;game.input.lastX=e.clientX;
