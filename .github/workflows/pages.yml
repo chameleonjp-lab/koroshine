@@ -27,6 +27,7 @@ jobs:
       - run: python3 tools/check-site.py
       - run: node tools/share.test.mjs
       - run: node tools/participation.test.mjs
+      - run: node tools/ranking-contract.test.mjs
       - run: node tools/score-queue.test.cjs
       - name: Stage the validated public file
         run: python3 tools/check-site.py --out _site

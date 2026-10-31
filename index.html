@@ -563,6 +563,7 @@ ${PUBLIC_URL}`;
 
   // ---------- ランキング ----------
   async function callRpc(name,payload){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);try{const res=await fetch(RANKING_CONFIG.supabaseUrl+'/rest/v1/rpc/'+name,{method:'POST',signal:controller.signal,headers:{'Content-Type':'application/json','apikey':RANKING_CONFIG.publishableKey,'Authorization':'Bearer '+RANKING_CONFIG.publishableKey},body:JSON.stringify(payload)});if(!res.ok){let detail;try{detail=await res.json()}catch(_){}throw Object.assign(new Error(name+' failed: '+res.status),{code:detail?.code});}return res.status===204?null:res.json();}finally{clearTimeout(timer);}}
+function parseLeaderboard(data){if(!Array.isArray(data)||data.some(r=>!r||!Number.isSafeInteger(r.rank_no)||r.rank_no<1||typeof r.display_name!=='string'||!Number.isInteger(r.best_score)))throw new Error('Invalid leaderboard response');return data;}
   async function loadResultRanking(generation=rankingGeneration){
     const request=++rankingRequest;
     const list=$('rankingList');
@@ -571,7 +572,7 @@ ${PUBLIC_URL}`;
       const rows=await callRpc(RANKING_CONFIG.rankingRpc,{p_game_slug:RANKING_CONFIG.gameSlug,p_limit:30});
       if(generation!==rankingGeneration || request!==rankingRequest)return;
       rankingFetched=true;
-      renderRankingRows(Array.isArray(rows)?rows:[]);
+      renderRankingRows(parseLeaderboard(rows));
       if(!list.children.length)list.textContent='まだ記録がありません。';
     } catch(e) {
       if(generation!==rankingGeneration || request!==rankingRequest)return;
@@ -589,7 +590,7 @@ ${PUBLIC_URL}`;
   }
   function restoreResultSnapshot(){let saved;try{saved=JSON.parse(localStorage.getItem(RESULT_KEY)||'null')}catch(_){return false;}if(!saved||typeof saved.playerName!=='string'||!Number.isInteger(saved.score)||saved.score<0||!Number.isInteger(saved.floor)||saved.floor<1||saved.floor>MAX_FLOOR||typeof saved.won!=='boolean'||typeof saved.finalReason!=='string')return false;Object.assign(game,saved);gameOverHandled=true;rankingSent=true;rankingGeneration++;renderResult();renderRankingShell();renderSubmission();void loadResultRanking();return true;}
   function renderRankingShell(){$('rankingStatus').textContent='ランキング送信準備中...';$('rankingList').replaceChildren()}
-  function renderRankingRows(rows){const list=$('rankingList');list.replaceChildren(...rows.slice(0,30).map((r,i)=>{const li=document.createElement('li');const rank=document.createElement('span');rank.textContent=(r.rank_no??r.rank??r.ranking??i+1)+'.';const name=document.createElement('span');name.textContent=r.display_name||r.player_name||r.name||'名無し';const score=document.createElement('span');score.textContent=Math.round(Number(r.score||r.best_score||0));li.append(rank,name,score);return li}))}
+  function renderRankingRows(rows){const list=$('rankingList');list.replaceChildren(...rows.slice(0,30).map((r,i)=>{const li=document.createElement('li');const rank=document.createElement('span');rank.textContent=(r.rank_no)+'.';const name=document.createElement('span');name.textContent=r.display_name;const score=document.createElement('span');score.textContent=r.best_score;li.append(rank,name,score);return li}))}
 
   let queueStorage=null;try{queueStorage=localStorage}catch(_){}
   scoreQueue=CommonScoreQueue.createScoreQueue({gameSlug:RANKING_CONFIG.gameSlug,storage:queueStorage,send:p=>callRpc(RANKING_CONFIG.submitRpc,p),onChange(item,receipt){
