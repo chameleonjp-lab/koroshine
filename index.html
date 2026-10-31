@@ -18,12 +18,12 @@
 </head>
 <body>
 <div class="app" id="app">
-  <section class="screen active" id="home"><div class="card"><h1>コロシャイン</h1><p class="lead">重力で落ちて跳ねる太陽を、<br>塔を回してすき間へ通し続けろ。</p><label for="playerName">名前（任意・10文字まで）</label><input id="playerName" autocomplete="nickname" placeholder="なまえ" aria-describedby="namePrivacy"><p id="namePrivacy">名前を入力すると、名前と記録がランキングに公開されます。空欄でも遊べます。</p><div class="buttons"><button id="startBtn">ゲーム開始</button><button class="secondary" id="ruleBtn">ルール説明</button><button class="secondary common-x-share" data-share="game">Xでシェア</button><a class="common-ranking-link" href="https://chameleonjp-lab.github.io/chameleonjp_lab/ranking.html?game=koroshine">ランキング</a><a class="button secondary" href="https://chameleonjp-lab.github.io/chameleonjp_lab/" target="_blank" rel="noopener">その他のゲーム</a></div></div></section>
+  <section class="screen active" id="home"><div class="card"><h1>コロシャイン</h1><p class="lead">重力で落ちて跳ねる太陽を、<br>塔を回してすき間へ通し続けろ。</p><label for="playerName">名前（任意・10文字まで）</label><input id="playerName" autocomplete="nickname" placeholder="なまえ" aria-describedby="namePrivacy"><p id="namePrivacy">名前を入力すると、名前と記録がランキングに公開されます。空欄でも遊べます。</p><button id="pendingRetryHome" class="secondary" hidden>未送信の記録を再送</button><div class="buttons"><button id="startBtn">ゲーム開始</button><button class="secondary" id="ruleBtn">ルール説明</button><button class="secondary common-x-share" data-share="game">Xでシェア</button><a class="common-ranking-link" href="https://chameleonjp-lab.github.io/chameleonjp_lab/ranking.html?game=koroshine">ランキング</a><a class="button secondary" href="https://chameleonjp-lab.github.io/chameleonjp_lab/" target="_blank" rel="noopener">その他のゲーム</a></div></div></section>
   <section class="screen" id="rule"><div class="card"><h2>ルール</h2><div class="rules"><p>太陽は重力で落下し、床に当たると跳ね返ります。左右ドラッグで塔を回し、床のすき間（穴）を正面に合わせて下へ通してください。</p><ul><li>1階通過: +100</li><li>🌰取得: +50（🌰→☀️）</li><li>跳ねずに連続落下でコンボ加点</li><li><b>3連続落下でファイアボール化🔥</b>：床も<b>赤い危険帯</b>もぶち破って一気に落下（+300）</li><li>40階到達: +3000 でクリア</li><li>通常時に<b>赤い危険帯</b>へ乗ると終了</li></ul></div><div class="buttons"><button id="ruleStartBtn">ゲーム開始</button><button class="secondary" data-goto="HOME">ホームへ</button></div></div></section>
   <section class="screen" id="name"><div class="card"><h2>名前入力</h2><p>ランキング用の名前を10文字程度で入力してください。</p><div class="buttons"><button id="readyBtn">準備OK</button><button class="secondary" data-goto="HOME">戻る</button></div></div></section>
   <section class="screen" id="ready"><div class="card"><h2>READY</h2><p class="lead">左右ドラッグで塔を回転！<br>正面のすき間に太陽を通し、3連続でファイアボール🔥を狙え。</p><div class="buttons"><button id="playBtn">スタート</button><button class="secondary" data-goto="HOME">名前を変える</button></div></div></section>
   <section class="game" id="game"><div class="hud"><div><span>スコア</span><strong id="scoreText">0</strong></div><div><span>現在階層</span><strong id="floorText">1 / 40</strong></div><button class="danger" id="retireBtn">リタイア</button></div><div class="canvas-wrap" id="canvasWrap"><canvas id="gameCanvas" aria-label="コロシャインのゲーム画面"></canvas></div><div class="hint">左右ドラッグで塔を回転。正面のすき間に通そう。3連続でファイアボール🔥、赤い帯は危険！</div></section>
-  <section class="screen" id="result"><div class="card"><h2 id="resultTitle">結果</h2><div class="result-grid"><div class="stat">終了理由<br><strong id="resultReason">-</strong></div><div class="stat">到達階<br><strong id="resultFloor">1</strong></div><div class="stat">スコア<br><strong id="resultScore">0</strong></div></div><div class="notice" id="resultComment">まずは10階を目指しましょう</div><div class="notice" id="rankingStatus" role="status" aria-live="polite">ランキング送信準備中...</div><h3>ランキング</h3><ol class="ranking" id="rankingList"></ol><button class="secondary" id="rankingRetryBtn">ランキングを再取得</button><div class="buttons"><button id="retryBtn">もう一度遊ぶ</button><button class="secondary common-x-share" data-share="result">Xでシェア</button><a class="common-ranking-link" href="https://chameleonjp-lab.github.io/chameleonjp_lab/ranking.html?game=koroshine">ランキング</a><a class="button secondary" href="https://chameleonjp-lab.github.io/chameleonjp_lab/" target="_blank" rel="noopener">その他のゲーム</a><button class="secondary" data-goto="HOME">ホームへ</button></div></div></section>
+  <section class="screen" id="result"><div class="card"><h2 id="resultTitle">結果</h2><div class="result-grid"><div class="stat">終了理由<br><strong id="resultReason">-</strong></div><div class="stat">到達階<br><strong id="resultFloor">1</strong></div><div class="stat">スコア<br><strong id="resultScore">0</strong></div></div><div class="notice" id="resultComment">まずは10階を目指しましょう</div><div class="notice" id="rankingStatus" role="status" aria-live="polite">ランキング送信準備中...</div><div class="buttons"><button id="retryBtn">もう一度遊ぶ</button><button class="secondary common-x-share" data-share="result">Xでシェア</button><a class="common-ranking-link" href="https://chameleonjp-lab.github.io/chameleonjp_lab/ranking.html?game=koroshine">ランキング</a><a class="button secondary" href="https://chameleonjp-lab.github.io/chameleonjp_lab/" target="_blank" rel="noopener">その他のゲーム</a><button class="secondary" data-goto="HOME">ホームへ</button></div><button id="submissionRetryBtn" class="secondary" hidden>送信を再試行</button><h3>ランキング</h3><ol class="ranking" id="rankingList"></ol><button class="secondary" id="rankingRetryBtn">ランキングを再取得</button></div></section>
   <section class="screen" id="error"><div class="card"><h2>ERROR</h2><p id="errorMessage">エラーが発生しました。</p><button data-goto="HOME">ホームへ</button></div></section>
 </div>
 <style>
@@ -83,12 +83,92 @@ button.common-x-share { background:#000 !important; color:#fff !important; borde
 })();
 </script>
 
+<script id="score-queue">
+(function (root) {
+  'use strict';
+  const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  const copy = value => JSON.parse(JSON.stringify(value));
+  function createScoreQueue({gameSlug, storage = null, send, onChange = () => {}, uuid = () => root.crypto.randomUUID()}) {
+    const prefix = gameSlug + ':score-pending:v1:';
+    const memory = new Map();
+    let operation = null;
+    function valid(item) {
+      const p = item?.payload;
+      return UUID.test(item?.id || '') && p?.p_submission_id === item.id && p.p_game_slug === gameSlug &&
+        typeof p.p_display_name === 'string' && p.p_display_name.trim() !== '' &&
+        typeof p.p_client_version === 'string' && Number.isInteger(p.p_score) && p.p_score >= 0;
+    }
+    function save(item) {
+      memory.set(item.id, copy(item));
+      try { storage?.setItem(prefix + item.id, JSON.stringify(item)); } catch { /* Keep this session usable. */ }
+      return item;
+    }
+    function list() {
+      try {
+        if (storage) for (let i = 0; i < storage.length; i++) {
+          const key = storage.key(i);
+          if (!key?.startsWith(prefix)) continue;
+          try { const item = JSON.parse(storage.getItem(key)); if (valid(item)) memory.set(item.id, item); } catch { /* Preserve malformed data without sending it. */ }
+        }
+      } catch { /* Memory contains records saved in this session. */ }
+      return [...memory.values()].map(copy).sort((a,b) => a.createdAt - b.createdAt || a.id.localeCompare(b.id));
+    }
+    function notify(item, receipt = null) { try { onChange(copy(item), receipt && copy(receipt)); } catch {} }
+    function capture(name, clientVersion) {
+      if (!name?.trim()) return null;
+      try { const id = uuid(); if (!UUID.test(id)) return null; return Object.freeze({id, name:name.trim(), clientVersion}); }
+      catch { return null; }
+    }
+    function enqueue(play, score, presentation = null) {
+      if (!play) return null;
+      const existing = list().find(item => item.id === play.id);
+      const payload = {p_submission_id:play.id,p_display_name:play.name,p_game_slug:gameSlug,p_score:score,p_client_version:play.clientVersion};
+      if (existing) {
+        if (JSON.stringify(existing.payload) !== JSON.stringify(payload)) throw new Error('A finalized play cannot change');
+        return existing;
+      }
+      const item = {id:play.id,payload,presentation:copy(presentation),createdAt:Date.now(),state:'pending'};
+      if (!valid(item)) throw new Error('Invalid finalized score');
+      save(item);notify(item);return copy(item);
+    }
+    function drain() {
+      if (operation) return operation;
+      operation = (async () => {
+        const attempted = new Set();
+        for (;;) {
+          const item = list().find(value => !attempted.has(value.id) && value.state !== 'rejected');
+          if (!item) break;
+          attempted.add(item.id);item.state='sending';save(item);notify(item);
+          try {
+            const response = await send(copy(item.payload));
+            const receipt = Array.isArray(response) ? response[0] : response;
+            if (receipt?.accepted !== true) { const error=new Error('Score rejected');error.code='PT422';throw error; }
+            if (receipt.result_display_name !== item.payload.p_display_name || receipt.result_normalized_name !== item.payload.p_display_name || !Number.isInteger(receipt.result_first_score) || !Number.isInteger(receipt.result_best_score) || !Number.isInteger(receipt.result_play_count) || receipt.result_play_count < 1 || typeof receipt.was_duplicate !== 'boolean') throw new Error('Invalid score acknowledgement');
+            item.state='submitted';
+            memory.delete(item.id);
+            try { storage?.removeItem(prefix + item.id); } catch { /* Same ID is safe to retry after reload. */ }
+            notify(item, receipt);
+          } catch (error) {
+            item.state = ['PT409','PT422','22023','22001','22003'].includes(error?.code) ? 'rejected' : 'pending';
+            save(item);notify(item);
+          }
+        }
+      })().finally(() => { operation=null; });
+      return operation;
+    }
+    return {capture,enqueue,list,drain,prefix};
+  }
+  const api={createScoreQueue};
+  if (typeof module === 'object' && module.exports) module.exports=api;
+  root.CommonScoreQueue=api;
+})(typeof globalThis === 'object' ? globalThis : this);
+</script>
 <script>
 (() => {
   'use strict';
   const STATE={HOME:'HOME',RULE:'RULE',NAME:'NAME',READY:'READY',PLAYING:'PLAYING',RESULT:'RESULT',ERROR:'ERROR'};
   const PUBLIC_URL='https://chameleonjp.codeberg.page/koroshine/';
-  const RANKING_CONFIG={enabled:true,supabaseUrl:'https://mlpnjgezrnhdxsxolyzj.supabase.co',publishableKey:'sb_publishable_drzcy0v97knU6FgjqSgBHw_0A9XPdFM',submitRpc:'submit_score',rankingRpc:'get_best_score_ranking',statsRpc:'get_game_play_stats',gameSlug:'koroshine',clientVersion:'koroshine-2.1.0'};
+  const RANKING_CONFIG={enabled:true,supabaseUrl:'https://mlpnjgezrnhdxsxolyzj.supabase.co',publishableKey:'sb_publishable_drzcy0v97knU6FgjqSgBHw_0A9XPdFM',submitRpc:'submit_score_once_shared_v1',rankingRpc:'get_best_score_ranking',statsRpc:'get_game_play_stats',gameSlug:'koroshine',clientVersion:'koroshine-common-20261031'};
   const $=id=>document.getElementById(id);
   const screens={HOME:$('home'),RULE:$('rule'),NAME:$('name'),READY:$('ready'),RESULT:$('result'),ERROR:$('error')};
   const gameEl=$('game'), canvas=$('gameCanvas'), wrap=$('canvasWrap'), ctx=canvas.getContext('2d');
@@ -108,7 +188,7 @@ button.common-x-share { background:#000 !important; color:#fff !important; borde
   const zoneOf=n=>Math.min(PAL.length-1,Math.floor((n-1)/6));
   let state=STATE.HOME,last=0,dpr=1,rafId=0,acc=0,ro=null;
   let rankingSent=false,rankingFetched=false,gameOverHandled=false;
-  let rankingGeneration=0,rankingRequest=0;
+  let rankingGeneration=0,rankingRequest=0;const RESULT_KEY='koroshine:last-result:v1';let scoreQueue;
   const view={W:1,H:1,R:140,r0:34,RBALL:19};
   const game={
     score:0,floor:1,angle:0,by:0,bvy:0,cameraY:0,fire:0,postFireGrace:0,
@@ -455,18 +535,19 @@ button.common-x-share { background:#000 !important; color:#fff !important; borde
   function finish(won,reason){
     if(gameOverHandled)return;gameOverHandled=true;
     game.pendingFinish=null;game.fire=0;game.won=won;game.finalReason=reason;state=STATE.RESULT;
-    wrap.classList.toggle('clear',won);
-    $('resultTitle').textContent=won?'クリア！':'結果';
-    $('resultReason').textContent=reason||(won?'クリア':'終了');
+    game.submissionStatus=game.playerName?(game.play?'pending':'failed'):'guest';saveResultSnapshot();renderResult();renderRankingShell();submitAndFetchRankingOnce();
+  }
+  function renderResult(){
+    wrap.classList.toggle('clear',game.won);
+    $('resultTitle').textContent=game.won?'クリア！':'結果';
+    $('resultReason').textContent=game.finalReason||(game.won?'クリア':'終了');
     const reachedFloor=Math.min(game.floor,MAX_FLOOR);
-    $('resultFloor').textContent=reachedFloor;
-    $('resultScore').textContent=game.score;
-    $('resultComment').textContent=resultComment(reachedFloor);
-    setState(STATE.RESULT);renderRankingShell();submitAndFetchRankingOnce();
+    $('resultFloor').textContent=reachedFloor;$('resultScore').textContent=game.score;
+    $('resultComment').textContent=resultComment(reachedFloor);setState(STATE.RESULT);
   }
 
   // ---------- 名前・シェア ----------
-  function startReady(){const name=Array.from(playerNameInput.value.trim()).slice(0,10).join('');try{localStorage.setItem('koroshine:name',name)}catch(e){}game.playerName=name;setState(STATE.READY)}
+  function startReady(){const name=Array.from(playerNameInput.value.trim()).slice(0,10).join('');try{localStorage.setItem('koroshine:name',name)}catch(e){}game.playerName=name;game.play=scoreQueue.capture(name,RANKING_CONFIG.clientVersion);game.submissionStatus=name?'pending':'guest';setState(STATE.READY)}
   function share(kind){
     const floor=Math.min(game.floor,MAX_FLOOR);
     const text=kind==='result'
@@ -481,7 +562,7 @@ ${PUBLIC_URL}`;
   }
 
   // ---------- ランキング ----------
-  async function callRpc(name,payload){const res=await fetch(RANKING_CONFIG.supabaseUrl+'/rest/v1/rpc/'+name,{method:'POST',headers:{'Content-Type':'application/json','apikey':RANKING_CONFIG.publishableKey,'Authorization':'Bearer '+RANKING_CONFIG.publishableKey},body:JSON.stringify(payload)});if(!res.ok){const msg=await res.text().catch(()=>'');throw new Error((name+' failed: '+res.status+' '+msg).trim())}return res.status===204?null:res.json()}
+  async function callRpc(name,payload){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);try{const res=await fetch(RANKING_CONFIG.supabaseUrl+'/rest/v1/rpc/'+name,{method:'POST',signal:controller.signal,headers:{'Content-Type':'application/json','apikey':RANKING_CONFIG.publishableKey,'Authorization':'Bearer '+RANKING_CONFIG.publishableKey},body:JSON.stringify(payload)});if(!res.ok){let detail;try{detail=await res.json()}catch(_){}throw Object.assign(new Error(name+' failed: '+res.status),{code:detail?.code});}return res.status===204?null:res.json();}finally{clearTimeout(timer);}}
   async function loadResultRanking(generation=rankingGeneration){
     const request=++rankingRequest;
     const list=$('rankingList');
@@ -498,31 +579,24 @@ ${PUBLIC_URL}`;
       list.textContent='ランキングを取得できませんでした。「ランキングを再取得」で再試行できます。';
     }
   }
+  function saveResultSnapshot(){if(state!==STATE.RESULT)return;try{localStorage.setItem(RESULT_KEY,JSON.stringify({playerName:game.playerName,play:game.play,score:game.score,floor:game.floor,won:game.won,finalReason:game.finalReason,submissionStatus:game.submissionStatus}));}catch(_){}}
+  function renderSubmission(){const texts={guest:'名前なしでプレイしたため、この結果はランキングへ送信しません。',pending:'記録は送信待ちです。同じ記録の送信を再試行できます。',sending:'ランキング送信中...',submitted:'ランキングへ送信しました。',failed:'ランキング送信に失敗しました。今回の結果はこの画面に保持しています。',rejected:'ランキング送信に失敗しました。今回の結果はこの画面に保持しています。'};$('rankingStatus').textContent=texts[game.submissionStatus]||texts.failed;$('submissionRetryBtn').hidden=!(game.play&&['pending','failed'].includes(game.submissionStatus));$('pendingRetryHome').hidden=scoreQueue.list().length===0;}
   async function submitAndFetchRankingOnce(){
-    if(rankingSent)return;
-    rankingSent=true;
-    const generation=rankingGeneration;
-    const result=Object.freeze({name:game.playerName,score:game.score});
-    const status=$('rankingStatus');
-    if(!result.name){
-      status.textContent='名前なしでプレイしたため、この結果はランキングへ送信しません。';
-    } else {
-      status.textContent='ランキング送信中...';
-      try {
-        if(!RANKING_CONFIG.enabled)throw new Error('ranking disabled');
-        await callRpc(RANKING_CONFIG.submitRpc,{p_display_name:result.name,p_game_slug:RANKING_CONFIG.gameSlug,p_score:result.score,p_client_version:RANKING_CONFIG.clientVersion});
-        if(generation!==rankingGeneration)return;
-        status.textContent='ランキングへ送信しました。';
-      } catch(e) {
-        if(generation!==rankingGeneration)return;
-        status.textContent='ランキング送信に失敗しました。今回の結果はこの画面に保持しています。';
-      }
-    }
-    await loadResultRanking(generation);
+    if(rankingSent)return;rankingSent=true;
+    renderSubmission();const read=loadResultRanking(rankingGeneration);
+    if(game.playerName&&game.play){try{scoreQueue.enqueue(game.play,game.score,{floor:game.floor,won:game.won,reason:game.finalReason});await scoreQueue.drain();}catch(_){game.submissionStatus='failed';saveResultSnapshot();renderSubmission();}}
+    await read;
   }
+  function restoreResultSnapshot(){let saved;try{saved=JSON.parse(localStorage.getItem(RESULT_KEY)||'null')}catch(_){return false;}if(!saved||typeof saved.playerName!=='string'||!Number.isInteger(saved.score)||saved.score<0||!Number.isInteger(saved.floor)||saved.floor<1||saved.floor>MAX_FLOOR||typeof saved.won!=='boolean'||typeof saved.finalReason!=='string')return false;Object.assign(game,saved);gameOverHandled=true;rankingSent=true;rankingGeneration++;renderResult();renderRankingShell();renderSubmission();void loadResultRanking();return true;}
   function renderRankingShell(){$('rankingStatus').textContent='ランキング送信準備中...';$('rankingList').replaceChildren()}
   function renderRankingRows(rows){const list=$('rankingList');list.replaceChildren(...rows.slice(0,30).map((r,i)=>{const li=document.createElement('li');const rank=document.createElement('span');rank.textContent=(r.rank_no??r.rank??r.ranking??i+1)+'.';const name=document.createElement('span');name.textContent=r.display_name||r.player_name||r.name||'名無し';const score=document.createElement('span');score.textContent=Math.round(Number(r.score||r.best_score||0));li.append(rank,name,score);return li}))}
 
+  let queueStorage=null;try{queueStorage=localStorage}catch(_){}
+  scoreQueue=CommonScoreQueue.createScoreQueue({gameSlug:RANKING_CONFIG.gameSlug,storage:queueStorage,send:p=>callRpc(RANKING_CONFIG.submitRpc,p),onChange(item,receipt){
+    $('pendingRetryHome').hidden=scoreQueue.list().length===0;
+    if(state!==STATE.RESULT||game.play?.id!==item.id)return;
+    game.submissionStatus=item.state==='pending'&&game.submissionStatus==='sending'?'failed':item.state;saveResultSnapshot();renderSubmission();if(receipt)void loadResultRanking(rankingGeneration);
+  }});
   // ---------- 入力配線 ----------
   function canControlGame(){return state===STATE.PLAYING&&!game.pendingFinish}
   function wire(){
@@ -535,7 +609,7 @@ ${PUBLIC_URL}`;
     playerNameInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing&&e.keyCode!==229){e.preventDefault();startReady()}});
     $('playBtn').onclick=()=>setState(STATE.PLAYING);
     $('retryBtn').onclick=startReady;
-    $('rankingRetryBtn').onclick=()=>loadResultRanking();
+    $('rankingRetryBtn').onclick=()=>loadResultRanking();$('submissionRetryBtn').onclick=()=>scoreQueue.drain();$('pendingRetryHome').onclick=()=>scoreQueue.drain();playerNameInput.addEventListener('input',()=>{try{localStorage.setItem('koroshine:name',Array.from(playerNameInput.value.trim()).slice(0,10).join(''))}catch(_){}});
     $('retireBtn').onclick=()=>{if(!canControlGame())return;if(!confirm('リタイアして結果画面へ進みますか？'))return;if(!canControlGame())return;finish(false,'リタイア')};
     wrap.addEventListener('pointerdown',e=>{if(!canControlGame())return;game.input.active=true;game.input.lastX=e.clientX;game.dragStep=0;game.lastDragStep=0;try{wrap.setPointerCapture(e.pointerId)}catch(_){}vibrate(5)});
     wrap.addEventListener('pointermove',e=>{if(!game.input.active||!canControlGame())return;const dx=e.clientX-game.input.lastX;game.input.lastX=e.clientX;
@@ -554,7 +628,7 @@ ${PUBLIC_URL}`;
 
   // ---------- 起動 ----------
   try{if(DEBUG_MODE){window.__koro=game;window.__koroForce=(a)=>{game.angle=a};}}catch(e){}
-  try{playerNameInput.value=(localStorage.getItem('koroshine:name')||'');wire();resize();}
+  try{try{playerNameInput.value=(localStorage.getItem('koroshine:name')||'')}catch(_){}wire();resize();restoreResultSnapshot();$('pendingRetryHome').hidden=scoreQueue.list().length===0;void scoreQueue.drain();}
   catch(e){$('errorMessage').textContent=e.message;setState(STATE.ERROR)}
 })();
 </script>
