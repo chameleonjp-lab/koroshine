@@ -547,7 +547,7 @@ button.common-x-share { background:#000 !important; color:#fff !important; borde
   }
 
   // ---------- 名前・シェア ----------
-  function startReady(){const name=Array.from(playerNameInput.value.trim()).slice(0,10).join('');try{localStorage.setItem('koroshine:name',name)}catch(e){}game.playerName=name;game.play=scoreQueue.capture(name,RANKING_CONFIG.clientVersion);game.submissionStatus=name?'pending':'guest';setState(STATE.READY)}
+  function startReady(){try{localStorage.removeItem(RESULT_KEY)}catch(_){}const name=Array.from(playerNameInput.value.trim()).slice(0,10).join('');try{localStorage.setItem('koroshine:name',name)}catch(e){}game.playerName=name;game.play=scoreQueue.capture(name,RANKING_CONFIG.clientVersion);game.submissionStatus=name?'pending':'guest';setState(STATE.READY)}
   function share(kind){
     const floor=Math.min(game.floor,MAX_FLOOR);
     const text=kind==='result'
