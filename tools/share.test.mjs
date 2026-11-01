@@ -11,7 +11,7 @@ function setup(open=()=>null,writeText=async()=>{}) {
   for(const id of ['commonShareFallback','commonShareText','commonShareStatus','commonShareCopy','commonShareClose']) {
     nodes.set(id,{value:'',textContent:'',open:false,events:{},addEventListener(name,cb){this.events[name]=cb;},showModal(){this.open=true;},close(){this.open=false;},focus(){},select(){this.selected=true;}});
   }
-  const window={open};
+  const window={open,KoroI18n:{t:key=>({copied:'コピーしました。投稿はXで確認してください。',copyFailed:'本文を選択して手動でコピーしてください。'})[key]}};
   vm.runInNewContext(helper,{window,document:{getElementById:id=>nodes.get(id)},navigator:{clipboard:{writeText}},URL});
   return {window,nodes};
 }
@@ -53,5 +53,5 @@ test('copy success is a copy acknowledgement; closing never modifies result text
 });
 test('home and result each have a verified detail link and exact Japanese X label',()=>{
   assert.equal((html.match(/>Xでシェア<\/button>/g)||[]).length,2);
-  assert.equal((html.match(/class="common-ranking-link" href="https:\/\/chameleonjp-lab.github.io\/chameleonjp_lab\/ranking.html\?game=[^"]+">ランキング<\/a>/g)||[]).length,2);
+  assert.equal((html.match(/class="common-ranking-link" href="https:\/\/chameleonjp-lab.github.io\/chameleonjp_lab\/ranking.html\?game=[^"]+"[^>]*>ランキング<\/a>/g)||[]).length,2);
 });
