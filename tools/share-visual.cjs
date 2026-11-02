@@ -29,6 +29,9 @@ try{
  await home.evaluate(e=>e.style.cssText='position:fixed;top:-8px;left:20px;width:180px;z-index:9999');await assert.rejects(()=>visible(page,'[data-share=game]'));await home.evaluate(e=>e.style.cssText='');await visible(page,'[data-share=game]');
  for(const phase of ['home','result']){
   if(phase!=='home'){await page.evaluate(()=>{localStorage.setItem('koroshine:last-result:v1',JSON.stringify({playerName:'',play:null,score:12345,floor:17,won:false,finalReason:'リタイア',submissionStatus:'guest'}));if(!__shareTest.restoreResultSnapshot())throw Error('fixture restore failed')});assert.equal(await page.evaluate(()=>__shareTest.getState()),'RESULT');assert.equal(await page.evaluate(()=>__shareTest.game.play),null);}
+  const retry=phase==='home'?'#pendingRetryHome':'#submissionRetryBtn';
+  assert.equal(await page.locator(retry).evaluate(e=>e.hidden),true);assert.equal(await page.locator(retry).isVisible(),false);
+  await page.locator(retry).evaluate(e=>e.hidden=false);assert.equal(await page.locator(retry).isVisible(),true);await page.locator(retry).evaluate(e=>e.hidden=true);
   const selector=phase==='home'?'[data-share=game]':'[data-share=result]';
   for(const [lang,catalog]of Object.entries(catalogs)){
    await page.evaluate(lang=>window.KoroI18n.setLanguage(lang),lang);

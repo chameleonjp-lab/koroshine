@@ -18,3 +18,6 @@
 - 正式共有URL https://chameleonjp.codeberg.page/koroshine/ は維持。GitHub画像URLは既存移行先の配信準備で、登録切替/Codeberg更新/公開Xカード反映は今回未実施。
 - 作業branch push検証を限定追加、Pages upload/deployはmain pushのみ。runner/権限/公開設定を変更しない。本人マージ後の配信commit/PNG/OGを別確認。
 - 戻す場合は差分revert PR。既存名前/スコア/設定を消去する必要なし。
+
+## 画像受入で発見した別UI問題
+初回head0da9f48 CI41415101265は成功したが、WebKit PNGに匿名/pending0でも再送ボタンが見えた。既存buttonのdisplay:inline-flexがhidden属性の既定表示を上書きしていたため、ホーム未送信/結果再送の2 IDのhidden時だけdisplay:noneにする。通常の有効再送ボタン・イベント・送信条件は非変更。非表示CSS RED→GREEN、browserでhidden真=不可視/解除=可視/真へ復帰を直接確認する。これはX非表示原因修正ではない。
