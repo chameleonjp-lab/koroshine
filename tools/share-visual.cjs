@@ -2,7 +2,7 @@
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const engines=require(process.env.PLAYWRIGHT_MODULE||'playwright'),root=path.resolve(__dirname,'..');
 const raw=fs.readFileSync(path.join(root,'index.html'),'utf8'),html=raw.replace('  // ---------- 起動 ----------','  window.__shareTest={game,restoreResultSnapshot,getState:()=>state,t};\n  // ---------- 起動 ----------'),catalogs=JSON.parse(html.match(/<script id="locale-catalogs" type="application\/json">([\s\S]*?)<\/script>/)[1]);
-const origin='http://127.0.0.1:4199',publicUrl='https://chameleonjp.codeberg.page/koroshine/';
+const origin='http://127.0.0.1:4199',publicUrl='https://chameleonjp-lab.github.io/koroshine/';
 async function visible(page,selector){
  const e=page.locator(selector);assert.equal(await e.isVisible(),true);await e.scrollIntoViewIfNeeded();
  const a=await e.evaluate(el=>{
@@ -39,7 +39,7 @@ try{
    for(const viewport of [{width:402,height:874},{width:874,height:402}]){
     await page.setViewportSize(viewport);await visible(page,selector);await visible(page,`#${phase} .common-ranking-link`);
     const link=page.locator(selector);assert.equal(await link.textContent(),catalog.shareX);assert.deepEqual(await link.evaluate(e=>({bg:getComputedStyle(e).backgroundColor,fg:getComputedStyle(e).color})),{bg:'rgb(0, 0, 0)',fg:'rgb(255, 255, 255)'});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
-    const expected=await page.evaluate(result=>{const {game,t}=__shareTest;return t(result?'shareResult':'shareHome',{score:game.score,floor:Math.min(game.floor,40),url:'https://chameleonjp.codeberg.page/koroshine/'})+'\n#コロシャイン #ゲーム制作'},phase!=='home');
+    const expected=await page.evaluate(result=>{const {game,t}=__shareTest;return t(result?'shareResult':'shareHome',{score:game.score,floor:Math.min(game.floor,40),url:'https://chameleonjp-lab.github.io/koroshine/'})+'\n#コロシャイン #ゲーム制作'},phase!=='home');
     const before=intents.length,opened=context.waitForEvent('page');await link.tap();const popup=await opened;await popup.waitForURL('https://x.com/intent/post**');assert.equal(new URL(popup.url()).searchParams.get('text'),expected);assert.equal(intents.length,before+1);assert.equal(intents[before],expected);assert.ok(expected.includes(publicUrl));await popup.close();
     await page.evaluate(()=>{window.__shareOpen=window.open;window.open=()=>null;});await link.tap();assert.equal(await page.locator('#commonShareFallback').isVisible(),true);assert.equal(await page.locator('#commonShareText').inputValue(),expected);await page.click('#commonShareClose');await page.evaluate(()=>{window.open=window.__shareOpen;delete window.__shareOpen});assert.equal(intents.length,before+1);assert.equal(await page.locator('#commonShareCopy').isVisible(),false);
     assert.deepEqual(await page.evaluate(()=>({score:__shareTest.game.score,floor:__shareTest.game.floor,won:__shareTest.game.won,reason:__shareTest.game.finalReason,play:__shareTest.game.play})),frozen);assert.equal(scoreAttempts,0);
