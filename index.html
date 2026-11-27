@@ -676,7 +676,9 @@ function parseLeaderboard(data){if(!Array.isArray(data)||data.some(r=>!r||!Numbe
     $('ruleStartBtn').onclick=startReady;
     $('readyBtn').onclick=startReady;
     playerNameInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing&&e.keyCode!==229){e.preventDefault();startReady()}});
-    $('playBtn').onclick=()=>{sound.resume();sound.play('start');setState(STATE.PLAYING)};
+    $('playBtn').onclick=()=>{sound.resume();
+    void import(/* @vite-ignore */ "https://chameleonjp-lab.github.io/chameleonjp_lab/play-start.js").then(module => module.recordPlayStart("koroshine")).catch(() => {});
+    sound.play('start');setState(STATE.PLAYING)};
     $('retryBtn').onclick=startReady;
     $('rankingRetryBtn').onclick=()=>loadResultRanking();$('submissionRetryBtn').onclick=()=>{saveResultSnapshot();renderSubmission();void scoreQueue.drain()};$('pendingRetryHome').onclick=()=>scoreQueue.drain();playerNameInput.addEventListener('input',()=>{try{localStorage.setItem('koroshine:name',Array.from(playerNameInput.value.trim()).slice(0,10).join(''))}catch(_){}});
     $('retireBtn').onclick=()=>{if(!canControlGame())return;if(!confirm(t('confirmRetire')))return;if(!canControlGame())return;finish(false,'リタイア')};
